@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>A Detection-Aware Hierarchical Approach to Imperfect Environmental Sensing – goshdangy.github.io</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-4897d45d2f75ed4f519693be625836c5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">goshdangy.github.io</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./about.qmd"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#background" id="toc-background" class="nav-link active" data-scroll-target="#background"><span class="header-section-number">1</span> Background</a>
+  <ul class="collapse">
+  <li><a href="#monitoring-design-and-data-structure" id="toc-monitoring-design-and-data-structure" class="nav-link" data-scroll-target="#monitoring-design-and-data-structure"><span class="header-section-number">1.1</span> Monitoring design and data structure</a></li>
+  <li><a href="#how-does-this-inform-our-model" id="toc-how-does-this-inform-our-model" class="nav-link" data-scroll-target="#how-does-this-inform-our-model"><span class="header-section-number">1.2</span> How does this inform our model?</a></li>
+  </ul></li>
+  <li><a href="#overview" id="toc-overview" class="nav-link" data-scroll-target="#overview"><span class="header-section-number">2</span> Overview</a>
+  <ul class="collapse">
+  <li><a href="#dag" id="toc-dag" class="nav-link" data-scroll-target="#dag"><span class="header-section-number">2.1</span> DAG</a></li>
+  </ul></li>
+  <li><a href="#read-data" id="toc-read-data" class="nav-link" data-scroll-target="#read-data"><span class="header-section-number">3</span> Read Data</a></li>
+  <li><a href="#data-summary" id="toc-data-summary" class="nav-link" data-scroll-target="#data-summary"><span class="header-section-number">4</span> Data Summary</a></li>
+  <li><a href="#statistical-models" id="toc-statistical-models" class="nav-link" data-scroll-target="#statistical-models"><span class="header-section-number">5</span> Statistical Models</a></li>
+  <li><a href="#model-summaries" id="toc-model-summaries" class="nav-link" data-scroll-target="#model-summaries"><span class="header-section-number">6</span> Model summaries</a>
+  <ul class="collapse">
+  <li><a href="#choosing-our-analysis" id="toc-choosing-our-analysis" class="nav-link" data-scroll-target="#choosing-our-analysis"><span class="header-section-number">6.1</span> Choosing Our Analysis</a>
+  <ul class="collapse">
+  <li><a href="#naive-model" id="toc-naive-model" class="nav-link" data-scroll-target="#naive-model"><span class="header-section-number">6.1.1</span> 1. Naive model</a></li>
+  <li><a href="#occurrence-model" id="toc-occurrence-model" class="nav-link" data-scroll-target="#occurrence-model"><span class="header-section-number">6.1.2</span> 2. Occurrence model</a></li>
+  <li><a href="#detection-model" id="toc-detection-model" class="nav-link" data-scroll-target="#detection-model"><span class="header-section-number">6.1.3</span> 3. Detection model</a></li>
+  </ul></li>
+  <li><a href="#summary-output" id="toc-summary-output" class="nav-link" data-scroll-target="#summary-output"><span class="header-section-number">6.2</span> <code>summary()</code> output</a></li>
+  <li><a href="#compact-posterior-summary-table" id="toc-compact-posterior-summary-table" class="nav-link" data-scroll-target="#compact-posterior-summary-table"><span class="header-section-number">6.3</span> Compact posterior summary table</a></li>
+  <li><a href="#r-hat-and-ess-table" id="toc-r-hat-and-ess-table" class="nav-link" data-scroll-target="#r-hat-and-ess-table"><span class="header-section-number">6.4</span> R-hat and ESS Table</a></li>
+  </ul></li>
+  <li><a href="#posterior-predictive-checks" id="toc-posterior-predictive-checks" class="nav-link" data-scroll-target="#posterior-predictive-checks"><span class="header-section-number">7</span> Posterior predictive checks</a></li>
+  <li><a href="#repeated-surveys-and-imperfect-detection" id="toc-repeated-surveys-and-imperfect-detection" class="nav-link" data-scroll-target="#repeated-surveys-and-imperfect-detection"><span class="header-section-number">8</span> Repeated surveys and imperfect detection</a></li>
+  <li><a href="#predicted-detection-probability-across-cloud-cover" id="toc-predicted-detection-probability-across-cloud-cover" class="nav-link" data-scroll-target="#predicted-detection-probability-across-cloud-cover"><span class="header-section-number">9</span> Predicted detection probability across cloud cover</a></li>
+  <li><a href="#naive-versus-detection-aware-occurrence-across-site-age" id="toc-naive-versus-detection-aware-occurrence-across-site-age" class="nav-link" data-scroll-target="#naive-versus-detection-aware-occurrence-across-site-age"><span class="header-section-number">10</span> Naive versus detection-aware occurrence across site age</a></li>
+  <li><a href="#benchmark-occurance" id="toc-benchmark-occurance" class="nav-link" data-scroll-target="#benchmark-occurance"><span class="header-section-number">11</span> Benchmark Occurance</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">12</span> Conclusion</a></li>
+  <li><a href="#appendix" id="toc-appendix" class="nav-link" data-scroll-target="#appendix"><span class="header-section-number">13</span> Appendix</a>
+  <ul class="collapse">
+  
+  
+  
+  </ul></li>
+  <li><a href="#session-checks" id="toc-session-checks" class="nav-link" data-scroll-target="#session-checks"><span class="header-section-number">14</span> Session checks</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">A Detection-Aware Hierarchical Approach to Imperfect Environmental Sensing</h1>
+<p class="subtitle lead">Methane Leak Monitoring Across Repeated Surveys</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(brms)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(posterior)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"outputs"</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"outputs/models"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"outputs/tables"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"outputs/summaries"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="background" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Background</h1>
+<p>I have a repeated-survey methane monitoring dataset. Each site is visited multiple times within one monitoring window. For each survey, I record whether a methane leak was detected, along with survey conditions such as cloud cover and sensor type. At the site level, I also have infrastructure age and region.</p>
+<p>The key problem is that a nondetection is ambiguous. A zero in the observed data can mean that no leak was present, but it can also mean that a leak was present and the monitoring system missed it.</p>
+<p>That is the whole statistical tension in this project.</p>
+<p>So our data story is not just “did we detect a leak?” It is:</p>
+<ul>
+<li><p><strong>site status process</strong>: is there actually a leak at this site?</p></li>
+<li><p><strong>observation process</strong>: if there is a leak, do survey conditions allow us to detect it?</p></li>
+</ul>
+<section id="monitoring-design-and-data-structure" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="monitoring-design-and-data-structure"><span class="header-section-number">1.1</span> Monitoring design and data structure</h2>
+<p>This analysis uses a repeated-survey methane monitoring dataset with 24 sites distributed across 4 regions and 4 surveys per site, for a total of 96 survey observations. The four surveys occur within a single monitoring window, so site status is treated as fixed across visits. Site age is used as a predictor of occurrence, while cloud cover and sensor type are used as predictors of detection. A benchmark-confirmed site-status variable is also available, which allows the site-level occurrence model to be evaluated against known status rather than relying only on observed detection.</p>
+</section>
+<section id="how-does-this-inform-our-model" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="how-does-this-inform-our-model"><span class="header-section-number">1.2</span> How does this inform our model?</h2>
+<p>The outcomes of interest—whether a site was ever detected, whether a leak was present, and whether a leak was detected during a given survey—<strong>are all binary</strong>, so a Bernoulli model with a logit link is the natural framework. In that sense, the analysis extends the basic logic of linear regression to a response that is a probability rather than a continuous value. The <strong>detection model</strong> also functions as a multiple regression because it estimates the effects of cloud cover and sensor type at the same time, allowing each to be interpreted in relation to the other. The <strong>occurrence model</strong> adds a region random intercept, which brings in random-effects modeling by allowing baseline leak probability to vary across regions rather than assuming all sites share the same starting point. The analysis also depends on posterior sampling and MCMC: parameters are represented as distributions of plausible values rather than as single fixed estimates, and uncertainty is summarized with posterior means and credible intervals. More broadly, the paper analysis fits within Bayesian regression because it moves beyond a single simple regression and shows how generalized linear models, partial pooling, and basic overfitting control can be used together in an environmental monitoring problem.</p>
+<p><em><strong>Supplementary Note:</strong> Without a thesis for this paper to contribute to, my goal was to demonstrate a working knowledge of statistical knowledge gained from the EcoStats course. As a result, there is no existing datset to analyze and the monitoring dataset used here was constructed with the assistance of AI. Additionally, AI was used to edit Quarto formatting to ensure readability.</em></p>
+</section>
+</section>
+<section id="overview" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Overview</h1>
+<p>This document analyzes a repeated-survey methane monitoring dataset with imperfect detection. The benchmark data files are included with the project, so the analysis begins by reading in the static site-level and survey-level data rather than generating them inside the report.</p>
+<p>The three fitted models stay within course scope:</p>
+<ul>
+<li><strong>naive model</strong>: <code>ever_detected ~ site_age_z</code></li>
+<li><strong>occurrence model</strong>: <code>true_event ~ site_age_z + (1 | region</code></li>
+<li><strong>conditional detection model</strong>: <code>detected ~ cloud_cover_z + sensor_advanced</code></li>
+</ul>
+<section id="dag" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="dag"><span class="header-section-number">2.1</span> DAG</h2>
+<p><img src="DAG.jpg" class="img-fluid"></p>
+<p><strong>Site age</strong> and <strong>region</strong> affect the probability that a site truly has a leak. <strong>True site</strong> status then determines whether a <strong>detection</strong> is even possible. Conditional on a leak being present, <strong>cloud cover</strong> and <strong>sensor type</strong> affect the probability that the leak is observed during a survey. My goals was to separate the occurrence process from the observation process without overstating the analysis as a full latent-state model.</p>
+</section>
+</section>
+<section id="read-data" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Read Data</h1>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>site_df <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">"data/site_df.csv"</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">site_id =</span> <span class="fu">factor</span>(site_id),</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">region =</span> <span class="fu">factor</span>(region, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"North"</span>, <span class="st">"South"</span>, <span class="st">"Central"</span>, <span class="st">"West"</span>))</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>survey_df <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">"data/survey_df.csv"</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">site_id =</span> <span class="fu">factor</span>(site_id),</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">survey_id =</span> <span class="fu">factor</span>(survey_id),</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">region =</span> <span class="fu">factor</span>(region, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"North"</span>, <span class="st">"South"</span>, <span class="st">"Central"</span>, <span class="st">"West"</span>)),</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">sensor_type =</span> <span class="fu">factor</span>(sensor_type, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"basic"</span>, <span class="st">"advanced"</span>))</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>site_naive_df <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">"data/site_naive_df.csv"</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">site_id =</span> <span class="fu">factor</span>(site_id),</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">region =</span> <span class="fu">factor</span>(region, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"North"</span>, <span class="st">"South"</span>, <span class="st">"Central"</span>, <span class="st">"West"</span>))</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="data-summary" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Data Summary</h1>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_sites =</span> <span class="fu">nrow</span>(site_df),</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_survey_rows =</span> <span class="fu">nrow</span>(survey_df),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_regions =</span> dplyr<span class="sc">::</span><span class="fu">n_distinct</span>(site_df<span class="sc">$</span>region),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">surveys_per_site =</span> dplyr<span class="sc">::</span><span class="fu">n_distinct</span>(survey_df<span class="sc">$</span>survey_id),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">true_occurrence_prevalence =</span> <span class="fu">mean</span>(site_df<span class="sc">$</span>true_event),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">observed_survey_detection_prevalence =</span> <span class="fu">mean</span>(survey_df<span class="sc">$</span>detected),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">site_ever_detected_prevalence =</span> <span class="fu">mean</span>(site_naive_df<span class="sc">$</span>ever_detected)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 7
+  n_sites n_survey_rows n_regions surveys_per_site true_occurrence_prevalence
+    &lt;int&gt;         &lt;int&gt;     &lt;int&gt;            &lt;int&gt;                      &lt;dbl&gt;
+1      24            96         4                4                      0.542
+# ℹ 2 more variables: observed_survey_detection_prevalence &lt;dbl&gt;,
+#   site_ever_detected_prevalence &lt;dbl&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="statistical-models" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Statistical Models</h1>
+<p>Because the continuous predictors are standardized, <code>normal(0, 1)</code> is a sensible weak prior for slopes on the logit scale, while <code>normal(0, 1.5)</code> is a weak prior for intercepts. The random-intercept standard deviation gets an <code>exponential(1)</code> prior.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>naive_priors <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prior</span>(<span class="fu">normal</span>(<span class="dv">0</span>, <span class="fl">1.5</span>), <span class="at">class =</span> <span class="st">"Intercept"</span>),</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prior</span>(<span class="fu">normal</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">class =</span> <span class="st">"b"</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>occurrence_priors <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prior</span>(<span class="fu">normal</span>(<span class="dv">0</span>, <span class="fl">1.5</span>), <span class="at">class =</span> <span class="st">"Intercept"</span>),</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prior</span>(<span class="fu">normal</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">class =</span> <span class="st">"b"</span>),</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prior</span>(<span class="fu">exponential</span>(<span class="dv">1</span>), <span class="at">class =</span> <span class="st">"sd"</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>detection_priors <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prior</span>(<span class="fu">normal</span>(<span class="dv">0</span>, <span class="fl">1.5</span>), <span class="at">class =</span> <span class="st">"Intercept"</span>),</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prior</span>(<span class="fu">normal</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">class =</span> <span class="st">"b"</span>)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>naive_fit <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"outputs/models/naive_fit.rds"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>occurrence_fit <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"outputs/models/occurrence_fit.rds"</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>detection_fit <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"outputs/models/detection_fit.rds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="model-summaries" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Model summaries</h1>
+<section id="choosing-our-analysis" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="choosing-our-analysis"><span class="header-section-number">6.1</span> Choosing Our Analysis</h2>
+<p>We chose these models because they match the structure of the data <strong>without going beyond course scope</strong>.</p>
+<section id="naive-model" class="level3" data-number="6.1.1">
+<h3 data-number="6.1.1" class="anchored" data-anchor-id="naive-model"><span class="header-section-number">6.1.1</span> 1. Naive model</h3>
+<p><code>ever_detected ~ site_age_z</code></p>
+<p>This model treats “detected at least once” as if it were the same as “site truly has a leak.” It is intentionally naive. I use it as a comparison model because it shows what happens when imperfect detection is ignored.</p>
+</section>
+<section id="occurrence-model" class="level3" data-number="6.1.2">
+<h3 data-number="6.1.2" class="anchored" data-anchor-id="occurrence-model"><span class="header-section-number">6.1.2</span> 2. Occurrence model</h3>
+<p><code>true_event ~ site_age_z + (1 | region)</code></p>
+<p>This is the site-level model. It asks: how does the probability of a leak change with infrastructure age, while allowing regions to have different baselines? I include a region random intercept because sites in the same region are not fully independent, and random intercepts are the standard way to represent group-specific baseline differences.</p>
+</section>
+<section id="detection-model" class="level3" data-number="6.1.3">
+<h3 data-number="6.1.3" class="anchored" data-anchor-id="detection-model"><span class="header-section-number">6.1.3</span> 3. Detection model</h3>
+<p><code>detected ~ cloud_cover_z + sensor_advanced</code>, fit only where <code>true_event == 1</code></p>
+<p>This is the survey-level model. It asks how cloud cover and sensor type affect the chance of detecting a leak when a leak is actually present.</p>
+<p>So the analysis is split into:</p>
+<ul>
+<li><p>a <strong>benchmark occurrence model</strong></p></li>
+<li><p>a <strong>conditional detection model</strong></p></li>
+<li><p>plus a <strong>naive model</strong> for contrast</p></li>
+</ul>
+<p>While I could build a more elaborate hierarchical occupancy model that can estimate occupancy and detection jointly, that demands more data and complexity than the scope of what I sat out for the project.</p>
+</section>
+</section>
+<section id="summary-output" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="summary-output"><span class="header-section-number">6.2</span> <code>summary()</code> output</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(naive_fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Family: bernoulli 
+  Links: mu = logit 
+Formula: ever_detected ~ site_age_z 
+   Data: site_naive_df (Number of observations: 24) 
+  Draws: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+         total post-warmup draws = 4000
+
+Regression Coefficients:
+           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept     -0.14      0.43    -1.00     0.70 1.00     3189     2728
+site_age_z     0.94      0.46     0.12     1.87 1.00     3540     2701
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(occurrence_fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Family: bernoulli 
+  Links: mu = logit 
+Formula: true_event ~ site_age_z + (1 | region) 
+   Data: site_df (Number of observations: 24) 
+  Draws: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+         total post-warmup draws = 4000
+
+Multilevel Hyperparameters:
+~region (Number of levels: 4) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.58      0.56     0.02     2.01 1.00     1741     1634
+
+Regression Coefficients:
+           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept      0.32      0.57    -0.84     1.47 1.00     2117     1497
+site_age_z     1.46      0.59     0.40     2.69 1.00     3013     2495
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(detection_fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Family: bernoulli 
+  Links: mu = logit 
+Formula: detected ~ cloud_cover_z + sensor_advanced 
+   Data: filter(survey_df, true_event == 1) (Number of observations: 52) 
+  Draws: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+         total post-warmup draws = 4000
+
+Regression Coefficients:
+                Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept          -0.79      0.39    -1.58    -0.05 1.00     3106     3116
+cloud_cover_z      -1.03      0.36    -1.77    -0.38 1.00     3033     2833
+sensor_advanced     1.33      0.58     0.22     2.49 1.00     3215     2853
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
+</div>
+</div>
+</section>
+<section id="compact-posterior-summary-table" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="compact-posterior-summary-table"><span class="header-section-number">6.3</span> Compact posterior summary table</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>posterior_summary_table <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">posterior_summary</span>(naive_fit) <span class="sc">|&gt;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rownames_to_column</span>(<span class="st">"parameter"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(parameter <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"b_Intercept"</span>, <span class="st">"b_site_age_z"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Naive"</span>),</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">posterior_summary</span>(occurrence_fit) <span class="sc">|&gt;</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rownames_to_column</span>(<span class="st">"parameter"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(parameter <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"b_Intercept"</span>, <span class="st">"b_site_age_z"</span>, <span class="st">"sd_region__Intercept"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Occurrence"</span>),</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">posterior_summary</span>(detection_fit) <span class="sc">|&gt;</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rownames_to_column</span>(<span class="st">"parameter"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(parameter <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"b_Intercept"</span>, <span class="st">"b_cloud_cover_z"</span>, <span class="st">"b_sensor_advanced"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Detection"</span>)</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(model, parameter, Estimate, Est.Error, Q2<span class="fl">.5</span>, Q97<span class="fl">.5</span>)</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>posterior_summary_table</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 6
+  model      parameter            Estimate Est.Error    Q2.5   Q97.5
+  &lt;chr&gt;      &lt;chr&gt;                   &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+1 Naive      b_Intercept            -0.141     0.433 -1.00    0.696 
+2 Naive      b_site_age_z            0.943     0.457  0.120   1.87  
+3 Occurrence b_Intercept             0.320     0.572 -0.842   1.47  
+4 Occurrence b_site_age_z            1.46      0.590  0.404   2.69  
+5 Occurrence sd_region__Intercept    0.578     0.561  0.0172  2.01  
+6 Detection  b_Intercept            -0.788     0.389 -1.58   -0.0478
+7 Detection  b_cloud_cover_z        -1.03      0.357 -1.77   -0.378 
+8 Detection  b_sensor_advanced       1.33      0.577  0.215   2.49  </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(posterior_summary_table, <span class="st">"outputs/summaries/posterior_summary_table.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The posterior summary table provides the main coefficient estimates on the logit scale. The most stable patterns in this analysis are the positive association between site age and occurrence and the negative association between cloud cover and detection. The advanced sensor coefficient is positive in direction, which is consistent with better performance, but its interpretation should follow the uncertainty shown in the interval estimate.</p>
+</section>
+<section id="r-hat-and-ess-table" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="r-hat-and-ess-table"><span class="header-section-number">6.4</span> R-hat and ESS Table</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>diagnostics_table <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  naive_fit <span class="sc">|&gt;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as_draws_df</span>() <span class="sc">|&gt;</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise_draws</span>(<span class="fu">default_convergence_measures</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(variable <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"b_Intercept"</span>, <span class="st">"b_site_age_z"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Naive"</span>),</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  occurrence_fit <span class="sc">|&gt;</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as_draws_df</span>() <span class="sc">|&gt;</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise_draws</span>(<span class="fu">default_convergence_measures</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(variable <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"b_Intercept"</span>, <span class="st">"b_site_age_z"</span>, <span class="st">"sd_region__Intercept"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Occurrence"</span>),</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  detection_fit <span class="sc">|&gt;</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as_draws_df</span>() <span class="sc">|&gt;</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise_draws</span>(<span class="fu">default_convergence_measures</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(variable <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"b_Intercept"</span>, <span class="st">"b_cloud_cover_z"</span>, <span class="st">"b_sensor_advanced"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Detection"</span>)</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(model, variable, rhat, ess_bulk, ess_tail)</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>diagnostics_table</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 5
+  model      variable              rhat ess_bulk ess_tail
+  &lt;chr&gt;      &lt;chr&gt;                &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+1 Naive      b_Intercept           1.00    3189.    2728.
+2 Naive      b_site_age_z          1.00    3540.    2701.
+3 Occurrence b_Intercept           1.00    2117.    1497.
+4 Occurrence b_site_age_z          1.00    3013.    2495.
+5 Occurrence sd_region__Intercept  1.00    1741.    1634.
+6 Detection  b_Intercept           1.00    3106.    3116.
+7 Detection  b_cloud_cover_z       1.00    3033.    2833.
+8 Detection  b_sensor_advanced     1.00    3215.    2853.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(diagnostics_table, <span class="st">"outputs/summaries/diagnostics_table.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The convergence diagnostics do not suggest major sampling problems. Values of R^R^ near 1 and adequate effective sample sizes indicate that the posterior chains mixed well enough for the current analysis. This does not guarantee a perfect model, but it does support the basic reliability of the posterior summaries.</p>
+</section>
+</section>
+<section id="posterior-predictive-checks" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Posterior predictive checks</h1>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pp_check</span>(naive_fit, <span class="at">type =</span> <span class="st">"bars"</span>, <span class="at">ndraws =</span> <span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Posterior predictive check for the naive model.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><em><strong>Figure 1.</strong> Posterior predictive check for the naive model.</em></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pp_check</span>(occurrence_fit, <span class="at">type =</span> <span class="st">"bars"</span>, <span class="at">ndraws =</span> <span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Posterior predictive check for the occurrence model.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><em><strong>Figure 2.</strong> Posterior predictive check for the occurrence model.</em></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pp_check</span>(detection_fit, <span class="at">type =</span> <span class="st">"bars"</span>, <span class="at">ndraws =</span> <span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Posterior predictive check for the conditional detection model.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><em><strong>Figure 3.</strong> Posterior predictive check for the conditional detection model.</em></p>
+<p>The posterior predictive checks suggest that all three Bernoulli models reproduce the overall proportion of zeros and ones reasonably well. They show that the models are not obviously misfitting the data, but they do not by themselves establish that every predictor relationship has been captured in detail.</p>
+</section>
+<section id="repeated-surveys-and-imperfect-detection" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Repeated surveys and imperfect detection</h1>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>figure1_sites <span class="ot">&lt;-</span> survey_df <span class="sc">|&gt;</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(region, site_id) <span class="sc">|&gt;</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">true_event =</span> <span class="fu">first</span>(true_event),</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_detected =</span> <span class="fu">sum</span>(detected),</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_surveys =</span> <span class="fu">n</span>(),</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">priority =</span> <span class="fu">case_when</span>(</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>      true_event <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> n_detected <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> n_detected <span class="sc">&lt;</span> n_surveys <span class="sc">~</span> <span class="dv">1</span>L,</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>      true_event <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> n_detected <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="dv">2</span>L,</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>      true_event <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="dv">3</span>L,</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">4</span>L</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(region, priority, <span class="fu">desc</span>(n_detected), site_id) <span class="sc">|&gt;</span></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(region) <span class="sc">|&gt;</span></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(site_id)</span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>history_df <span class="ot">&lt;-</span> survey_df <span class="sc">|&gt;</span></span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(site_id <span class="sc">%in%</span> figure1_sites) <span class="sc">|&gt;</span></span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">outcome_type =</span> <span class="fu">case_when</span>(</span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>      true_event <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"True absence"</span>,</span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>      true_event <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> detected <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"Missed detection"</span>,</span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>      true_event <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> detected <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="st">"Detected"</span></span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">outcome_type =</span> <span class="fu">factor</span>(</span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a>      outcome_type,</span>
+<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a>      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"True absence"</span>, <span class="st">"Missed detection"</span>, <span class="st">"Detected"</span>)</span>
+<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(history_df, <span class="fu">aes</span>(<span class="at">x =</span> survey_id, <span class="at">y =</span> <span class="fu">fct_rev</span>(site_id), <span class="at">fill =</span> outcome_type)) <span class="sc">+</span></span>
+<span id="cb22-38"><a href="#cb22-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb22-39"><a href="#cb22-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> region, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb22-40"><a href="#cb22-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
+<span id="cb22-41"><a href="#cb22-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb22-42"><a href="#cb22-42" aria-hidden="true" tabindex="-1"></a>      <span class="st">"True absence"</span> <span class="ot">=</span> <span class="st">"grey85"</span>,</span>
+<span id="cb22-43"><a href="#cb22-43" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Missed detection"</span> <span class="ot">=</span> <span class="st">"goldenrod2"</span>,</span>
+<span id="cb22-44"><a href="#cb22-44" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Detected"</span> <span class="ot">=</span> <span class="st">"seagreen3"</span></span>
+<span id="cb22-45"><a href="#cb22-45" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb22-46"><a href="#cb22-46" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb22-47"><a href="#cb22-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Survey occasion"</span>, <span class="at">y =</span> <span class="st">"Site"</span>, <span class="at">fill =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb22-48"><a href="#cb22-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb22-49"><a href="#cb22-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb22-50"><a href="#cb22-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb22-51"><a href="#cb22-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb22-52"><a href="#cb22-52" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Repeated surveys within one monitoring window. Gray tiles indicate benchmark-confirmed absence, gold tiles indicate missed detection, and green tiles indicate successful detection.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><em><strong>Figure 4.</strong> Repeated surveys within one monitoring window. Gray tiles indicate benchmark-confirmed absence, gold tiles indicate missed detection, and green tiles indicate successful detection. The figure shows that even when a leak is present, it is not detected on every survey.</em></p>
+<p>Some sites with benchmark-confirmed leaks were detected on some visits but missed on others, which means a zero in the observed data does not always imply absence. This is the reason a naive model can underestimate occurrence: it treats nondetection and true absence as if they were the same outcome.</p>
+</section>
+<section id="predicted-detection-probability-across-cloud-cover" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Predicted detection probability across cloud cover</h1>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>cloud_seq <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">min</span>(survey_df<span class="sc">$</span>cloud_cover), <span class="fu">max</span>(survey_df<span class="sc">$</span>cloud_cover), <span class="at">length.out =</span> <span class="dv">100</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>detection_newdata <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">cloud_cover =</span> cloud_seq,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">sensor_advanced =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">cloud_cover_z =</span> (cloud_cover <span class="sc">-</span> <span class="fu">mean</span>(survey_df<span class="sc">$</span>cloud_cover)) <span class="sc">/</span> <span class="fu">sd</span>(survey_df<span class="sc">$</span>cloud_cover),</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">sensor_type =</span> <span class="fu">factor</span>(</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">if_else</span>(sensor_advanced <span class="sc">==</span> <span class="dv">1</span>, <span class="st">"advanced"</span>, <span class="st">"basic"</span>),</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"basic"</span>, <span class="st">"advanced"</span>)</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>epred_detection <span class="ot">&lt;-</span> <span class="fu">posterior_epred</span>(</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>  detection_fit,</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> detection_newdata,</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">re_formula =</span> <span class="cn">NA</span></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>detection_plot_df <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(<span class="fu">t</span>(epred_detection)) <span class="sc">|&gt;</span></span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">row_id =</span> <span class="fu">row_number</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>row_id, <span class="at">names_to =</span> <span class="st">"draw"</span>, <span class="at">values_to =</span> <span class="st">"epred"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(row_id) <span class="sc">|&gt;</span></span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean =</span> <span class="fu">mean</span>(epred),</span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">lower =</span> <span class="fu">quantile</span>(epred, <span class="fl">0.025</span>),</span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">upper =</span> <span class="fu">quantile</span>(epred, <span class="fl">0.975</span>),</span>
+<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(detection_newdata)</span>
+<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(detection_plot_df, <span class="fu">aes</span>(<span class="at">x =</span> cloud_cover, <span class="at">y =</span> mean, <span class="at">color =</span> sensor_type, <span class="at">fill =</span> sensor_type)) <span class="sc">+</span></span>
+<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> lower, <span class="at">ymax =</span> upper), <span class="at">alpha =</span> <span class="fl">0.20</span>, <span class="at">linewidth =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.1</span>) <span class="sc">+</span></span>
+<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Cloud cover (%)"</span>,</span>
+<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Detection probability"</span>,</span>
+<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Sensor type"</span>,</span>
+<span id="cb23-41"><a href="#cb23-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Sensor type"</span></span>
+<span id="cb23-42"><a href="#cb23-42" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb23-43"><a href="#cb23-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb23-44"><a href="#cb23-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Posterior predicted detection probability across cloud cover for basic and advanced sensors.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><em><strong>Figure 5.</strong> Posterior predicted detection probability across cloud cover for basic and advanced sensors. Detection declines as cloud cover increases, while the advanced sensor remains associated with higher detection probability across most of the observed range.</em></p>
+<p>This figure shows the clearest signal in the survey-level analysis. Detection probability declines as cloud cover increases, which is consistent with the expectation that poor viewing conditions reduce successful remote sensing. The advanced sensor also tends to maintain higher predicted detection probability than the basic sensor, suggesting that sensor type matters as well.</p>
+</section>
+<section id="naive-versus-detection-aware-occurrence-across-site-age" class="level1" data-number="10">
+<h1 data-number="10"><span class="header-section-number">10</span> Naive versus detection-aware occurrence across site age</h1>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>age_seq <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">min</span>(site_df<span class="sc">$</span>site_age), <span class="fu">max</span>(site_df<span class="sc">$</span>site_age), <span class="at">length.out =</span> <span class="dv">100</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>age_seq_z <span class="ot">&lt;-</span> (age_seq <span class="sc">-</span> <span class="fu">mean</span>(site_df<span class="sc">$</span>site_age)) <span class="sc">/</span> <span class="fu">sd</span>(site_df<span class="sc">$</span>site_age)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>naive_newdata <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">site_age_z =</span> age_seq_z)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>occurrence_newdata <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">site_age_z =</span> age_seq_z,</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">region =</span> <span class="fu">factor</span>(<span class="st">"North"</span>, <span class="at">levels =</span> <span class="fu">levels</span>(site_df<span class="sc">$</span>region))</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>epred_naive <span class="ot">&lt;-</span> <span class="fu">posterior_epred</span>(</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>  naive_fit,</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> naive_newdata,</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">re_formula =</span> <span class="cn">NA</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>epred_occurrence <span class="ot">&lt;-</span> <span class="fu">posterior_epred</span>(</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>  occurrence_fit,</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> occurrence_newdata,</span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">re_formula =</span> <span class="cn">NA</span></span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>naive_curve_df <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(<span class="fu">t</span>(epred_naive)) <span class="sc">|&gt;</span></span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">row_id =</span> <span class="fu">row_number</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>row_id, <span class="at">names_to =</span> <span class="st">"draw"</span>, <span class="at">values_to =</span> <span class="st">"epred"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(row_id) <span class="sc">|&gt;</span></span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean =</span> <span class="fu">mean</span>(epred),</span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">lower =</span> <span class="fu">quantile</span>(epred, <span class="fl">0.025</span>),</span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">upper =</span> <span class="fu">quantile</span>(epred, <span class="fl">0.975</span>),</span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">site_age =</span> age_seq, <span class="at">model =</span> <span class="st">"Naive"</span>)</span>
+<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a>occurrence_curve_df <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(<span class="fu">t</span>(epred_occurrence)) <span class="sc">|&gt;</span></span>
+<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">row_id =</span> <span class="fu">row_number</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb24-37"><a href="#cb24-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>row_id, <span class="at">names_to =</span> <span class="st">"draw"</span>, <span class="at">values_to =</span> <span class="st">"epred"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb24-38"><a href="#cb24-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(row_id) <span class="sc">|&gt;</span></span>
+<span id="cb24-39"><a href="#cb24-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb24-40"><a href="#cb24-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean =</span> <span class="fu">mean</span>(epred),</span>
+<span id="cb24-41"><a href="#cb24-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">lower =</span> <span class="fu">quantile</span>(epred, <span class="fl">0.025</span>),</span>
+<span id="cb24-42"><a href="#cb24-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">upper =</span> <span class="fu">quantile</span>(epred, <span class="fl">0.975</span>),</span>
+<span id="cb24-43"><a href="#cb24-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb24-44"><a href="#cb24-44" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb24-45"><a href="#cb24-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">site_age =</span> age_seq, <span class="at">model =</span> <span class="st">"Detection-aware"</span>)</span>
+<span id="cb24-46"><a href="#cb24-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-47"><a href="#cb24-47" aria-hidden="true" tabindex="-1"></a>curve_df <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(naive_curve_df, occurrence_curve_df)</span>
+<span id="cb24-48"><a href="#cb24-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-49"><a href="#cb24-49" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(curve_df, <span class="fu">aes</span>(<span class="at">x =</span> site_age, <span class="at">y =</span> mean, <span class="at">color =</span> model, <span class="at">fill =</span> model)) <span class="sc">+</span></span>
+<span id="cb24-50"><a href="#cb24-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> lower, <span class="at">ymax =</span> upper), <span class="at">alpha =</span> <span class="fl">0.18</span>, <span class="at">linewidth =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb24-51"><a href="#cb24-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.1</span>) <span class="sc">+</span></span>
+<span id="cb24-52"><a href="#cb24-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb24-53"><a href="#cb24-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb24-54"><a href="#cb24-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Site age (years)"</span>,</span>
+<span id="cb24-55"><a href="#cb24-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Occurrence probability"</span>,</span>
+<span id="cb24-56"><a href="#cb24-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="cn">NULL</span>,</span>
+<span id="cb24-57"><a href="#cb24-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="cn">NULL</span></span>
+<span id="cb24-58"><a href="#cb24-58" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb24-59"><a href="#cb24-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb24-60"><a href="#cb24-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Naive versus detection-aware occurrence estimates across site age.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><em><strong>Figure 6.</strong> Naive versus detection-aware occurrence estimates across site age. Both models suggest higher leak probability at older sites, but the detection-aware analysis yields higher occurrence estimates by separating benchmark site status from observed detection.</em></p>
+<p>Both site-level models indicate that older infrastructure is associated with higher leak probability. The difference is that the naive model relies on whether a site was ever detected, whereas the occurrence model uses benchmark-confirmed site status and also accounts for region-level structure. As a result, the detection-aware curve sits above the naive curve across much of the age range, showing how imperfect detection can bias occurrence downward when observed detections are treated as direct truth.</p>
+</section>
+<section id="benchmark-occurance" class="level1" data-number="11">
+<h1 data-number="11"><span class="header-section-number">11</span> Benchmark Occurance</h1>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>appendix_df <span class="ot">&lt;-</span> site_naive_df <span class="sc">|&gt;</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age_bin =</span> <span class="fu">cut_number</span>(site_age, <span class="at">n =</span> <span class="dv">4</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(age_bin) <span class="sc">|&gt;</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">true_occurrence_prev =</span> <span class="fu">mean</span>(true_event),</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">observed_ever_detected_prev =</span> <span class="fu">mean</span>(ever_detected),</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age_bin =</span> <span class="fu">fct_inorder</span>(<span class="fu">as.character</span>(age_bin)))</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(appendix_df, <span class="fu">aes</span>(<span class="at">x =</span> age_bin)) <span class="sc">+</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> true_occurrence_prev, <span class="at">shape =</span> <span class="st">"Benchmark occurrence"</span>), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> true_occurrence_prev, <span class="at">group =</span> <span class="dv">1</span>, <span class="at">linetype =</span> <span class="st">"Benchmark occurrence"</span>)) <span class="sc">+</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> observed_ever_detected_prev, <span class="at">shape =</span> <span class="st">"Observed ever detected"</span>), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> observed_ever_detected_prev, <span class="at">group =</span> <span class="dv">1</span>, <span class="at">linetype =</span> <span class="st">"Observed ever detected"</span>)) <span class="sc">+</span></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Site-age bin"</span>,</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Prevalence"</span>,</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">shape =</span> <span class="cn">NULL</span>,</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">linetype =</span> <span class="cn">NULL</span></span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Observed detection prevalence and benchmark occurrence prevalence across site-age bins.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><em><strong>Figure 7.</strong> Observed ever-detected prevalence and benchmark occurrence prevalence across site-age bins. The gap between the two curves summarizes the downward bias introduced when nondetection is treated as absence.</em></p>
+<p>This figure provides a compact summary of the same contrast shown in Figure 6. Across age bins, benchmark occurrence is generally higher than observed ever-detected prevalence, especially where the probability of occurrence is greatest. This supports the broader conclusion that repeated-survey datasets should not be analyzed as though every zero means the same thing.</p>
+</section>
+<section id="conclusion" class="level1" data-number="12">
+<h1 data-number="12"><span class="header-section-number">12</span> Conclusion</h1>
+<p>This analysis shows why imperfect detection matters in methane monitoring. In a repeated-survey dataset, a nondetection can represent either true absence or a missed detection, and treating those outcomes as equivalent leads to lower estimated occurrence. The naive model captured the broad age pattern in the data, but it understated leak probability because it relied only on whether a site was ever detected. The detection-aware strategy gave a more informative picture by separating benchmark site status from survey-level detection and by allowing regional baselines to vary.</p>
+<p>The fitted models were intentionally simple. They stayed within the scope of the course: Bernoulli-logit models, one random-intercept structure, weakly regularizing priors, posterior summaries, and basic posterior predictive checks. Even within that limited framework, the analysis suggests that older infrastructure is associated with higher leak probability, cloud cover reduces detection, and sensor type can affect detectability. The broader lesson is straightforward. Environmental monitoring data are shaped both by the system being observed and by the process used to observe it. When those two sources of variation are collapsed into a single observed outcome, inference becomes easier, but also less reliable.</p>
+</section>
+<section id="appendix" class="level1" data-number="13">
+<h1 data-number="13"><span class="header-section-number">13</span> Appendix</h1>
+
+
+
+</section>
+<section id="session-checks" class="level1" data-number="14">
+<h1 data-number="14"><span class="header-section-number">14</span> Session checks</h1>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"brms"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] '2.23.0'</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"posterior"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] '1.7.0'</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.5.3 (2026-03-11)
+Platform: x86_64-pc-linux-gnu
+Running under: Ubuntu 24.04.4 LTS
+
+Matrix products: default
+BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 
+LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.26.so;  LAPACK version 3.12.0
+
+locale:
+ [1] LC_CTYPE=C.UTF-8       LC_NUMERIC=C           LC_TIME=C.UTF-8       
+ [4] LC_COLLATE=C.UTF-8     LC_MONETARY=C.UTF-8    LC_MESSAGES=C.UTF-8   
+ [7] LC_PAPER=C.UTF-8       LC_NAME=C              LC_ADDRESS=C          
+[10] LC_TELEPHONE=C         LC_MEASUREMENT=C.UTF-8 LC_IDENTIFICATION=C   
+
+time zone: UTC
+tzcode source: system (glibc)
+
+attached base packages:
+[1] stats     graphics  grDevices datasets  utils     methods   base     
+
+other attached packages:
+ [1] posterior_1.7.0 brms_2.23.0     Rcpp_1.1.1      lubridate_1.9.5
+ [5] forcats_1.0.1   stringr_1.6.0   dplyr_1.2.1     purrr_1.2.1    
+ [9] readr_2.2.0     tidyr_1.3.2     tibble_3.3.1    ggplot2_4.0.2  
+[13] tidyverse_2.0.0
+
+loaded via a namespace (and not attached):
+ [1] gtable_0.3.6          tensorA_0.36.2.1      xfun_0.57            
+ [4] QuickJSR_1.9.0        inline_0.3.21         lattice_0.22-9       
+ [7] tzdb_0.5.0            vctrs_0.7.2           tools_4.5.3          
+[10] generics_0.1.4        stats4_4.5.3          parallel_4.5.3       
+[13] pkgconfig_2.0.3       Matrix_1.7-5          checkmate_2.3.4      
+[16] RColorBrewer_1.1-3    S7_0.2.1              distributional_0.7.0 
+[19] RcppParallel_5.1.11-2 lifecycle_1.0.5       compiler_4.5.3       
+[22] farver_2.1.2          Brobdingnag_1.2-9     codetools_0.2-20     
+[25] htmltools_0.5.9       bayesplot_1.15.0      yaml_2.3.12          
+[28] pillar_1.11.1         crayon_1.5.3          StanHeaders_2.32.10  
+[31] bridgesampling_1.2-1  abind_1.4-8           nlme_3.1-169         
+[34] rstan_2.32.7          tidyselect_1.2.1      digest_0.6.39        
+[37] mvtnorm_1.3-6         stringi_1.8.7         reshape2_1.4.5       
+[40] labeling_0.4.3        fastmap_1.2.0         grid_4.5.3           
+[43] cli_3.6.5             magrittr_2.0.5        loo_2.9.0            
+[46] utf8_1.2.6            pkgbuild_1.4.8        withr_3.0.2          
+[49] scales_1.4.0          backports_1.5.1       bit64_4.6.0-1        
+[52] timechange_0.4.0      rmarkdown_2.31        matrixStats_1.5.0    
+[55] bit_4.6.0             gridExtra_2.3         hms_1.1.4            
+[58] coda_0.19-4.1         evaluate_1.0.5        knitr_1.51           
+[61] rstantools_2.6.0      rlang_1.2.0           glue_1.8.0           
+[64] renv_1.2.0            vroom_1.7.1           jsonlite_2.0.0       
+[67] plyr_1.8.9            R6_2.6.1             </code></pre>
+</div>
+</div>
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section id="appendix-a-site-level-data-dictionary" class="level2 appendix" data-number="13.1"><h2 class="anchored quarto-appendix-heading"><span class="header-section-number">13.1</span> Appendix A: Site-Level Data Dictionary</h2><div class="quarto-appendix-contents">
+
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Variable</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">site_id</td>
+<td style="text-align: left;">factor</td>
+<td style="text-align: left;">Unique identifier for monitoring site</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">region</td>
+<td style="text-align: left;">factor</td>
+<td style="text-align: left;">Region containing the site</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">site_age</td>
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">Infrastructure age in years</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">site_age_z</td>
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">Standardized site age</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">true_event</td>
+<td style="text-align: left;">integer</td>
+<td style="text-align: left;">Benchmark-confirmed methane leak status (0/1)</td>
+</tr>
+</tbody>
+</table>
+</div></section><section id="appendix-b-survey-level-data-dictionary" class="level2 appendix" data-number="13.2"><h2 class="anchored quarto-appendix-heading"><span class="header-section-number">13.2</span> Appendix B: Survey-Level Data Dictionary</h2><div class="quarto-appendix-contents">
+
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Variable</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">site_id</td>
+<td style="text-align: left;">factor</td>
+<td style="text-align: left;">Site identifier</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">survey_id</td>
+<td style="text-align: left;">factor</td>
+<td style="text-align: left;">Survey occasion within one monitoring window</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">region</td>
+<td style="text-align: left;">factor</td>
+<td style="text-align: left;">Region of site</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">site_age</td>
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">Infrastructure age in years</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">site_age_z</td>
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">Standardized site age</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">true_event</td>
+<td style="text-align: left;">integer</td>
+<td style="text-align: left;">Benchmark-confirmed site status, fixed across surveys</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">cloud_cover</td>
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">Cloud cover percentage during survey</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">cloud_cover_z</td>
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">Standardized cloud cover</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">sensor_type</td>
+<td style="text-align: left;">factor</td>
+<td style="text-align: left;">Sensor class: basic or advanced</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sensor_advanced</td>
+<td style="text-align: left;">integer</td>
+<td style="text-align: left;">Indicator for advanced sensor (0/1)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">detected</td>
+<td style="text-align: left;">integer</td>
+<td style="text-align: left;">Observed detection outcome (0/1)</td>
+</tr>
+</tbody>
+</table>
+</div></section><section id="appendix-c-model-parameter-dictionary" class="level2 appendix" data-number="13.3"><h2 class="anchored quarto-appendix-heading"><span class="header-section-number">13.3</span> Appendix C: Model Parameter Dictionary</h2><div class="quarto-appendix-contents">
+
+<div id="tbl-parameter-dictionary" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-parameter-dictionary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Model parameter dictionary
+</figcaption>
+<div aria-describedby="tbl-parameter-dictionary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Model</th>
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: left;">Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Naive fit</td>
+<td style="text-align: left;">Intercept</td>
+<td style="text-align: left;">Baseline log-odds of ever being detected</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Naive fit</td>
+<td style="text-align: left;">Site age</td>
+<td style="text-align: left;">Effect of standardized site age on ever-detected status</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Occurrence fit</td>
+<td style="text-align: left;">Intercept</td>
+<td style="text-align: left;">Baseline log-odds of benchmark occurrence</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Occurrence fit</td>
+<td style="text-align: left;">Site age</td>
+<td style="text-align: left;">Effect of standardized site age on benchmark occurrence</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Occurrence fit</td>
+<td style="text-align: left;">Region SD</td>
+<td style="text-align: left;">Between-region standard deviation in occurrence intercepts</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Detection fit</td>
+<td style="text-align: left;">Intercept</td>
+<td style="text-align: left;">Baseline log-odds of detection given benchmark-confirmed presence</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Detection fit</td>
+<td style="text-align: left;">Cloud cover</td>
+<td style="text-align: left;">Effect of standardized cloud cover on detection</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Detection fit</td>
+<td style="text-align: left;">Advanced sensor</td>
+<td style="text-align: left;">Effect of advanced sensor on detection</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/goshdangy\.github\.io\/methane\.github\.io\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
