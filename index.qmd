@@ -5,12 +5,6 @@ format:
   html:
     toc: true
     number-sections: true
-  pdf:
-    toc: true
-    number-sections: true
-    code-block-bg: "#F7F7F7"
-    code-block-border-left: "#D0D0D0"
-    code-line-numbers: false
 execute:
   echo: true
   warning: false
@@ -522,7 +516,7 @@ The fitted models were intentionally simple. They stayed within the scope of the
 ## Appendix B: Survey-Level Data Dictionary {.appendix}
 
 | Variable | Type | Description |
-|:---|:---|:---|
+|:-----------------------|:-----------------------|:-----------------------|
 | site_id | factor | Site identifier |
 | survey_id | factor | Survey occasion within one monitoring window |
 | region | factor | Region of site |
@@ -538,7 +532,7 @@ The fitted models were intentionally simple. They stayed within the scope of the
 ## Appendix C: Model Parameter Dictionary {.appendix}
 
 | Model | Parameter | Interpretation |
-|:---|:---|:---|
+|:-----------------------|:-----------------------|:-----------------------|
 | Naive fit | Intercept | Baseline log-odds of ever being detected |
 | Naive fit | Site age | Effect of standardized site age on ever-detected status |
 | Occurrence fit | Intercept | Baseline log-odds of benchmark occurrence |
