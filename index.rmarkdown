@@ -23,7 +23,6 @@ library(brms)
 library(posterior)
 
 dir.create("outputs", showWarnings = FALSE)
-dir.create("outputs/models", recursive = TRUE, showWarnings = FALSE)
 dir.create("outputs/tables", recursive = TRUE, showWarnings = FALSE)
 dir.create("outputs/summaries", recursive = TRUE, showWarnings = FALSE)
 ```
@@ -133,9 +132,32 @@ detection_priors <- c(
 ```{r}
 #| output: false
 
-naive_fit <- readRDS("outputs/models/naive_fit.rds")
-occurrence_fit <- readRDS("outputs/models/occurrence_fit.rds")
-detection_fit <- readRDS("outputs/models/detection_fit.rds")
+naive_fit <- brm(
+  ever_detected ~ site_age_z,
+  data = site_naive_df,
+  family = bernoulli(link = "logit"),
+  prior = naive_priors,
+  chains = 4, iter = 2000, warmup = 1000,
+  seed = 222
+)
+
+occurrence_fit <- brm(
+  true_event ~ site_age_z + (1 | region),
+  data = site_df,
+  family = bernoulli(link = "logit"),
+  prior = occurrence_priors,
+  chains = 4, iter = 2000, warmup = 1000,
+  seed = 222
+)
+
+detection_fit <- brm(
+  detected ~ cloud_cover_z + sensor_advanced,
+  data = survey_df |> filter(true_event == 1),
+  family = bernoulli(link = "logit"),
+  prior = detection_priors,
+  chains = 4, iter = 2000, warmup = 1000,
+  seed = 222
+)
 ```
 
 # Model summaries
@@ -557,3 +579,4 @@ packageVersion("brms")
 packageVersion("posterior")
 sessionInfo()
 ```
+
