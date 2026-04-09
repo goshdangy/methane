@@ -8,8 +8,8 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - href: README.txt
-        text: About
+      - href: fit_models.R
+        text: Models
 
 format:
   html:

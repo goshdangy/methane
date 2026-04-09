@@ -14,7 +14,9 @@ dir.create("outputs/tables", recursive = TRUE, showWarnings = FALSE)
 dir.create("outputs/summaries", recursive = TRUE, showWarnings = FALSE)
 ```
 
-# Background
+***Supplementary Note:** Without a thesis for this paper to contribute to, my goal was to demonstrate a working knowledge of statistical knowledge gained from the EcoStats course, while also improving my ability to present data and build a quarto/github workflow, presenting data is my core interest. As a result, there is no complete existing datset to analyze and the monitoring dataset used here was constructed using open data and the assistance of AI. Additionally, copilot was used to edit Quarto formatting to ensure formatting and functionality when publishing.*
+
+#  Background
 
 I have a repeated-survey methane monitoring dataset. Each site is visited multiple times within one monitoring window. For each survey, I record whether a methane leak was detected, along with survey conditions such as cloud cover and sensor type. At the site level, I also have infrastructure age and region.
 
@@ -35,8 +37,6 @@ This analysis uses a repeated-survey methane monitoring dataset with 24 sites di
 ## How does this inform our model?
 
 The outcomes of interest—whether a site was ever detected, whether a leak was present, and whether a leak was detected during a given survey—**are all binary**, so a Bernoulli model with a logit link is the natural framework. In that sense, the analysis extends the basic logic of linear regression to a response that is a probability rather than a continuous value. The **detection model** also functions as a multiple regression because it estimates the effects of cloud cover and sensor type at the same time, allowing each to be interpreted in relation to the other. The **occurrence model** adds a region random intercept, which brings in random-effects modeling by allowing baseline leak probability to vary across regions rather than assuming all sites share the same starting point. The analysis also depends on posterior sampling and MCMC: parameters are represented as distributions of plausible values rather than as single fixed estimates, and uncertainty is summarized with posterior means and credible intervals. More broadly, the paper analysis fits within Bayesian regression because it moves beyond a single simple regression and shows how generalized linear models, partial pooling, and basic overfitting control can be used together in an environmental monitoring problem.
-
-***Supplementary Note:** Without a thesis for this paper to contribute to, my goal was to demonstrate a working knowledge of statistical knowledge gained from the EcoStats course. As a result, there is no existing datset to analyze and the monitoring dataset used here was constructed with the assistance of AI. Additionally, AI was used to edit Quarto formatting to ensure readability.*
 
 # Overview
 
