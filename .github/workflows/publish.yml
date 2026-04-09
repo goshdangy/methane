@@ -27,10 +27,6 @@ jobs:
         with:
           r-version: '4.5.3'
 
-      - name: Configure R repos for CI
-        run: |
-          echo 'options(repos = c(CRAN="https://cloud.r-project.org"))' >> ~/.Rprofile
-
       - name: Install R Dependencies
         uses: r-lib/actions/setup-renv@v2
         with:
