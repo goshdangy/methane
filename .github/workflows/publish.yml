@@ -23,19 +23,22 @@ jobs:
           r-version: '4.5.3'
 
       - name: Install system dependencies for R packages
-         run: |
+        run: |
           sudo apt-get update
           sudo apt-get install -y \
           pandoc \
           libfontconfig1-dev \
           libfreetype6-dev \
-          libx11-dev- name: Install R Dependencies
+          libx11-dev- 
           
+      - name: Install R Dependencies
         uses: r-lib/actions/setup-renv@v2
         with:
           cache-version: 1
+      
       - name: Render site
-        run: quarto render
+        run: | 
+          quarto render
         
       - name: Render and Publish
         uses: quarto-dev/quarto-actions/publish@v2
