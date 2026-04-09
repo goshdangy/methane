@@ -34,7 +34,7 @@ jobs:
         uses: r-lib/actions/setup-renv@v2
         with:
           cache-version: 1
-      - name; Render site
+      - name: Render site
         run: quarto render
         
       - name: Render and Publish
