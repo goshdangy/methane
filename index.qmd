@@ -16,27 +16,31 @@ dir.create("outputs/summaries", recursive = TRUE, showWarnings = FALSE)
 
 ***Supplementary Note:** Without a thesis for this paper to contribute to, my goal was to demonstrate a working knowledge of statistical knowledge gained from the EcoStats course, while also improving my ability to present data and build a quarto/github workflow, presenting data is my core interest. As a result, there is no complete existing datset to analyze and the monitoring dataset used here was constructed using open data and the assistance of AI. Additionally, copilot was used to edit Quarto formatting to ensure formatting and functionality when publishing.*
 
-#  Background
+# Background
 
-I have a repeated-survey methane monitoring dataset. Each site is visited multiple times within one monitoring window. For each survey, I record whether a methane leak was detected, along with survey conditions such as cloud cover and sensor type. At the site level, I also have infrastructure age and region.
+I have a **repeated-survey** methane monitoring dataset. Each site is visited multiple times within one monitoring window. For each survey, I record whether a methane leak was detected, along with survey conditions such as *cloud cover* and *sensor type*. At the site level, I also have *infrastructure age* and *region*.
 
-The key problem is that a nondetection is ambiguous. A zero in the observed data can mean that no leak was present, but it can also mean that a leak was present and the monitoring system missed it.
+The key problem is that a nondetection is ambiguous. [A zero in the observed data can mean that no leak was present, but it can also mean that a leak was present and the monitoring system missed it.]{.underline}
 
 That is the whole statistical tension in this project.
 
 So our data story is not just “did we detect a leak?” It is:
 
--   **site status process**: is there actually a leak at this site?
+-   **site status process**: Is there actually a leak at this site?
 
--   **observation process**: if there is a leak, do survey conditions allow us to detect it?
+-   **observation process**: If there is a leak, do survey conditions allow us to detect it?
 
 ## Monitoring design and data structure
 
-This analysis uses a repeated-survey methane monitoring dataset with 24 sites distributed across 4 regions and 4 surveys per site, for a total of 96 survey observations. The four surveys occur within a single monitoring window, so site status is treated as fixed across visits. Site age is used as a predictor of occurrence, while cloud cover and sensor type are used as predictors of detection. A benchmark-confirmed site-status variable is also available, which allows the site-level occurrence model to be evaluated against known status rather than relying only on observed detection.
+This analysis uses a repeated-survey methane monitoring dataset with 24 sites distributed across 4 regions and 4 surveys per site, for a total of 96 survey observations. The four surveys occur within a single monitoring window, so site status is treated as **fixed** across visits. Site age is used as a [predictor of occurrence]{.underline}, while cloud cover and sensor type are used as [predictors of detection]{.underline}. A benchmark-confirmed site-status variable also allows the site-level occurrence model to be evaluated against known status rather than relying only on observed detection.
 
 ## How does this inform our model?
 
-The outcomes of interest—whether a site was ever detected, whether a leak was present, and whether a leak was detected during a given survey—**are all binary**, so a Bernoulli model with a logit link is the natural framework. In that sense, the analysis extends the basic logic of linear regression to a response that is a probability rather than a continuous value. The **detection model** also functions as a multiple regression because it estimates the effects of cloud cover and sensor type at the same time, allowing each to be interpreted in relation to the other. The **occurrence model** adds a region random intercept, which brings in random-effects modeling by allowing baseline leak probability to vary across regions rather than assuming all sites share the same starting point. The analysis also depends on posterior sampling and MCMC: parameters are represented as distributions of plausible values rather than as single fixed estimates, and uncertainty is summarized with posterior means and credible intervals. More broadly, the paper analysis fits within Bayesian regression because it moves beyond a single simple regression and shows how generalized linear models, partial pooling, and basic overfitting control can be used together in an environmental monitoring problem.
+**The outcomes of interest!**
+
+Whether a site was ever detected, whether a leak was present, and whether a leak was detected during a given survey are all binary, so a **Bernoulli** **model with a logit link** is the natural framework, so our response is probability rather than a continuous value. The **detection model** also functions as a multiple regression because it estimates the effects of cloud cover and sensor type at the same time. The **occurrence model** adds a region random intercept, allowing baseline leak probability to vary across regions rather than assuming all sites share the same starting point.
+
+Parameters are represented as distributions of plausible values rather than as single fixed estimates, and uncertainty is summarized with posterior means and credible intervals. More broadly, the paper analysis fits within Bayesian regression, moving beyond a single simple regression and shows how generalized linear models, partial pooling, and basic overfitting control can be used together in an environmental monitoring problem.
 
 # Overview
 
