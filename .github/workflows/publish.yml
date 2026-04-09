@@ -17,10 +17,19 @@ jobs:
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
+      - name: Install system dependencies (pandoc)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc
+
       - name: Install R
         uses: r-lib/actions/setup-r@v2
         with:
-          r-version: '4.2.0'
+          r-version: '4.5.3'
+
+      - name: Configure R repos for CI
+        run: |
+          echo 'options(repos = c(CRAN="https://cloud.r-project.org"))' >> ~/.Rprofile
 
       - name: Install R Dependencies
         uses: r-lib/actions/setup-renv@v2
