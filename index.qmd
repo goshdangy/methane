@@ -1,14 +1,6 @@
 ---
 title: "A Detection-Aware Hierarchical Approach to Imperfect Environmental Sensing"
 subtitle: "Methane Leak Monitoring Across Repeated Surveys"
-format:
-  html:
-    toc: true
-    number-sections: true
-execute:
-  echo: true
-  warning: false
-  message: false
 ---
 
 ```{r}
