@@ -40,16 +40,16 @@ This analysis uses a repeated-survey methane monitoring dataset with 24 sites di
 
 Whether a site was ever detected, whether a leak was present, and whether a leak was detected during a given survey are all binary, so a **Bernoulli** **model with a logit link** is the natural framework, so our response is probability rather than a continuous value. The **detection model** also functions as a multiple regression because it estimates the effects of cloud cover and sensor type at the same time. The **occurrence model** adds a region random intercept, allowing baseline leak probability to vary across regions rather than assuming all sites share the same starting point.
 
-Parameters are represented as distributions of plausible values rather than as single fixed estimates, and uncertainty is summarized with posterior means and credible intervals. More broadly, the paper analysis fits within Bayesian regression, moving beyond a single simple regression and shows how generalized linear models, partial pooling, and basic overfitting control can be used together in an environmental monitoring problem.
+Parameters are represented as distributions of plausible values rather than as single fixed estimates, and uncertainty is summarized with posterior means and credible intervals. More broadly, I aim to demonstrate Bayesian regression, moving beyond a single simple regression and show how generalized linear models, partial pooling, and basic overfitting control can be used together in an environmental monitoring problem.
 
 # Overview
 
-This document analyzes a repeated-survey methane monitoring dataset with imperfect detection. The benchmark data files are included with the project, so the analysis begins by reading in the static site-level and survey-level data rather than generating them inside the report.
+First, we analyze a repeated-survey methane monitoring dataset with imperfect detection. The benchmark data files are included with the project, so the analysis begins by reading in the static site-level and survey-level data rather than generating them inside the report.
 
-The three fitted models stay within course scope:
+The three fitted models are:
 
 -   **naive model**: `ever_detected ~ site_age_z`
--   **occurrence model**: `true_event ~ site_age_z + (1 | region`
+-   **occurrence model**: `true_event ~ site_age_z + (1 | region)`
 -   **conditional detection model**: `detected ~ cloud_cover_z + sensor_advanced`
 
 ## DAG
@@ -131,8 +131,6 @@ detection_fit <- readRDS("outputs/models/detection_fit.rds")
 # Model summaries
 
 ## Choosing Our Analysis
-
-We chose these models because they match the structure of the data **without going beyond course scope**.
 
 ### 1. Naive model
 
@@ -240,7 +238,7 @@ diagnostics_table
 write_csv(diagnostics_table, "outputs/summaries/diagnostics_table.csv")
 ```
 
-The convergence diagnostics do not suggest major sampling problems. Values of R\^\hat{R}R\^ near 1 and adequate effective sample sizes indicate that the posterior chains mixed well enough for the current analysis. This does not guarantee a perfect model, but it does support the basic reliability of the posterior summaries.
+The convergence diagnostics do not suggest major sampling problems. Values of *Rhat* near 1 and adequate effective sample sizes indicate that the posterior chains mixed well enough for the current analysis. This does not guarantee a perfect model, but it does support the basic reliability of the posterior summaries.
 
 # Posterior predictive checks
 
@@ -328,7 +326,7 @@ ggplot(history_df, aes(x = survey_id, y = fct_rev(site_id), fill = outcome_type)
 
 ***Figure 4.** Repeated surveys within one monitoring window. Gray tiles indicate benchmark-confirmed absence, gold tiles indicate missed detection, and green tiles indicate successful detection. The figure shows that even when a leak is present, it is not detected on every survey.*
 
-Some sites with benchmark-confirmed leaks were detected on some visits but missed on others, which means a zero in the observed data does not always imply absence. This is the reason a naive model can underestimate occurrence: it treats nondetection and true absence as if they were the same outcome.
+Some sites with benchmark-confirmed leaks were detected on some visits but missed on others, which means a zero in the observed data does not always imply absence. This is the reason a naive model can **underestimate occurrence:** **it treats nondetection and true absence as if they were the same outcome.**
 
 # Predicted detection probability across cloud cover
 
@@ -495,7 +493,7 @@ This figure provides a compact summary of the same contrast shown in Figure 6. A
 
 This analysis shows why imperfect detection matters in methane monitoring. In a repeated-survey dataset, a nondetection can represent either true absence or a missed detection, and treating those outcomes as equivalent leads to lower estimated occurrence. The naive model captured the broad age pattern in the data, but it understated leak probability because it relied only on whether a site was ever detected. The detection-aware strategy gave a more informative picture by separating benchmark site status from survey-level detection and by allowing regional baselines to vary.
 
-The fitted models were intentionally simple. They stayed within the scope of the course: Bernoulli-logit models, one random-intercept structure, weakly regularizing priors, posterior summaries, and basic posterior predictive checks. Even within that limited framework, the analysis suggests that older infrastructure is associated with higher leak probability, cloud cover reduces detection, and sensor type can affect detectability. The broader lesson is straightforward. Environmental monitoring data are shaped both by the system being observed and by the process used to observe it. When those two sources of variation are collapsed into a single observed outcome, inference becomes easier, but also less reliable.
+The fitted models were intentionally simple: Bernoulli-logit models, one random-intercept structure, weakly regularizing priors, posterior summaries, and basic posterior predictive checks. Even within that limited framework, the analysis suggests that older infrastructure is associated with higher leak probability, cloud cover reduces detection, and sensor type can affect detectability. The broader lesson is clear: environmental monitoring data are shaped both by the system being observed and by the process used to observe it. When those two sources of variation are collapsed into a single observed outcome, inference becomes easier, but also less reliable.
 
 # Appendix
 

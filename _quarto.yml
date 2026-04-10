@@ -10,6 +10,8 @@ website:
         text: Home
       - href: fit_models.R
         text: Models
+      - href: data/methane_df.zip
+        text: Data
 
 format:
   html:
