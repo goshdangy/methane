@@ -184,14 +184,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#predicted-detection-probability-across-cloud-cover" id="toc-predicted-detection-probability-across-cloud-cover" class="nav-link" data-scroll-target="#predicted-detection-probability-across-cloud-cover"><span class="header-section-number">9</span> Predicted detection probability across cloud cover</a></li>
   <li><a href="#naive-versus-detection-aware-occurrence-across-site-age" id="toc-naive-versus-detection-aware-occurrence-across-site-age" class="nav-link" data-scroll-target="#naive-versus-detection-aware-occurrence-across-site-age"><span class="header-section-number">10</span> Naive versus detection-aware occurrence across site age</a></li>
   <li><a href="#benchmark-occurance" id="toc-benchmark-occurance" class="nav-link" data-scroll-target="#benchmark-occurance"><span class="header-section-number">11</span> Benchmark Occurance</a></li>
-  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">12</span> Conclusion</a></li>
-  <li><a href="#appendix" id="toc-appendix" class="nav-link" data-scroll-target="#appendix"><span class="header-section-number">13</span> Appendix</a>
+  <li><a href="#part-ii-occurrence-model-flocker" id="toc-part-ii-occurrence-model-flocker" class="nav-link" data-scroll-target="#part-ii-occurrence-model-flocker"><span class="header-section-number">12</span> Part II: Occurrence Model &amp; <code>flocker</code></a>
+  <ul class="collapse">
+  <li><a href="#flocker-data-formatting" id="toc-flocker-data-formatting" class="nav-link" data-scroll-target="#flocker-data-formatting"><span class="header-section-number">12.1</span> <code>flocker</code> Data Formatting</a></li>
+  <li><a href="#flocker_fit" id="toc-flocker_fit" class="nav-link" data-scroll-target="#flocker_fit"><span class="header-section-number">12.2</span> <code>flocker_fit</code></a></li>
+  </ul></li>
+  <li><a href="#comparing-occurence-vs.-flocker" id="toc-comparing-occurence-vs.-flocker" class="nav-link" data-scroll-target="#comparing-occurence-vs.-flocker"><span class="header-section-number">13</span> Comparing <code>occurence</code> vs.&nbsp;<code>flocker</code></a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">14</span> Conclusion</a></li>
+  <li><a href="#appendix" id="toc-appendix" class="nav-link" data-scroll-target="#appendix"><span class="header-section-number">15</span> Appendix</a>
   <ul class="collapse">
   
   
   
   </ul></li>
-  <li><a href="#session-checks" id="toc-session-checks" class="nav-link" data-scroll-target="#session-checks"><span class="header-section-number">14</span> Session checks</a></li>
+  <li><a href="#session-checks" id="toc-session-checks" class="nav-link" data-scroll-target="#session-checks"><span class="header-section-number">16</span> Session checks</a></li>
   </ul>
 </nav>
     </div>
@@ -222,11 +228,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(brms)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(posterior)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"outputs"</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"outputs/models"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"outputs/tables"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"outputs/summaries"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(flocker)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"outputs"</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"outputs/models"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"outputs/tables"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"outputs/summaries"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><em><strong>Supplementary Note:</strong> Without a thesis for this paper to contribute to, my goal was to demonstrate a working knowledge of statistical knowledge gained from the EcoStats course, while also improving my ability to present data and build a quarto/github workflow, presenting data is my core interest. As a result, there is no complete existing datset to analyze and the monitoring dataset used here was constructed using open data and the assistance of AI. Additionally, copilot was used to edit Quarto formatting to ensure formatting and functionality when publishing.</em></p>
 <section id="background" class="level1" data-number="1">
@@ -804,29 +811,575 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <p><em><strong>Figure 7.</strong> Observed ever-detected prevalence and benchmark occurrence prevalence across site-age bins. The gap between the two curves summarizes the downward bias introduced when nondetection is treated as absence.</em></p>
 <p>This figure provides a compact summary of the same contrast shown in Figure 6. Across age bins, benchmark occurrence is generally higher than observed ever-detected prevalence, especially where the probability of occurrence is greatest. This supports the broader conclusion that repeated-survey datasets should not be analyzed as though every zero means the same thing.</p>
 </section>
-<section id="conclusion" class="level1" data-number="12">
-<h1 data-number="12"><span class="header-section-number">12</span> Conclusion</h1>
+<section id="part-ii-occurrence-model-flocker" class="level1" data-number="12">
+<h1 data-number="12"><span class="header-section-number">12</span> Part II: Occurrence Model &amp; <code>flocker</code></h1>
+<p>Now, More often than not, this is not how things work in reality. We do not have the “ground truth” at our disposal. So in this stage the goal is to see whether repeated survery histories alone contain enough information to recover the same broad ecological story about occurrence and imperfection detection.</p>
+<p>Statistically, the analysis shifts from separate Bernoulli-logit regressions to a single-season occupancy model. Instead of modeling <code>true_event</code> directly, the model treats true site status as a latent variable and estimates it jointly with the detection process using repeated detections and nondetections across visits.<br>
+</p>
+<section id="flocker-data-formatting" class="level2" data-number="12.1">
+<h2 data-number="12.1" class="anchored" data-anchor-id="flocker-data-formatting"><span class="header-section-number">12.1</span> <code>flocker</code> Data Formatting</h2>
+<p><code>flocker</code> expects:<br>
+<strong>Observation matrix</strong>: one row per site, one column per survey<br>
+<strong>Unit-level covariate</strong>: one row per site<br>
+<strong>Event-level covariates</strong>: one matrix per survey-level predictor<br>
+<br>
+So we are going to do a lot of pivoting..</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>obs_mat <span class="ot">&lt;-</span> survey_df <span class="sc">|&gt;</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(site_id, survey_id) <span class="sc">|&gt;</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(site_id, survey_id, detected) <span class="sc">|&gt;</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> survey_id,</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> detected</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">column_to_rownames</span>(<span class="st">"site_id"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>()</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>unit_covs <span class="ot">&lt;-</span> survey_df <span class="sc">|&gt;</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(site_id, region, site_age_z) <span class="sc">|&gt;</span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(site_id) <span class="sc">|&gt;</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">region =</span> <span class="fu">factor</span>(region, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"North"</span>, <span class="st">"South"</span>, <span class="st">"Central"</span>, <span class="st">"West"</span>))</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(region, site_age_z)</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>cloud_mat <span class="ot">&lt;-</span> survey_df <span class="sc">|&gt;</span></span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(site_id, survey_id) <span class="sc">|&gt;</span></span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(site_id, survey_id, cloud_cover_z) <span class="sc">|&gt;</span></span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> survey_id,</span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> cloud_cover_z</span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">column_to_rownames</span>(<span class="st">"site_id"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>()</span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a>sensor_mat <span class="ot">&lt;-</span> survey_df <span class="sc">|&gt;</span></span>
+<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(site_id, survey_id) <span class="sc">|&gt;</span></span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(site_id, survey_id, sensor_advanced) <span class="sc">|&gt;</span></span>
+<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> survey_id,</span>
+<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> sensor_advanced</span>
+<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb26-39"><a href="#cb26-39" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">column_to_rownames</span>(<span class="st">"site_id"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb26-40"><a href="#cb26-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>()</span>
+<span id="cb26-41"><a href="#cb26-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-42"><a href="#cb26-42" aria-hidden="true" tabindex="-1"></a>flocker_data <span class="ot">&lt;-</span> <span class="fu">make_flocker_data_static</span>(</span>
+<span id="cb26-43"><a href="#cb26-43" aria-hidden="true" tabindex="-1"></a>  <span class="at">obs =</span> obs_mat,</span>
+<span id="cb26-44"><a href="#cb26-44" aria-hidden="true" tabindex="-1"></a>  <span class="at">unit_covs =</span> unit_covs,</span>
+<span id="cb26-45"><a href="#cb26-45" aria-hidden="true" tabindex="-1"></a>  <span class="at">event_covs =</span> <span class="fu">list</span>(</span>
+<span id="cb26-46"><a href="#cb26-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">cloud_cover_z =</span> cloud_mat,</span>
+<span id="cb26-47"><a href="#cb26-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">sensor_advanced =</span> sensor_mat</span>
+<span id="cb26-48"><a href="#cb26-48" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb26-49"><a href="#cb26-49" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb26-50"><a href="#cb26-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-51"><a href="#cb26-51" aria-hidden="true" tabindex="-1"></a><span class="co">#check</span></span>
+<span id="cb26-52"><a href="#cb26-52" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(obs_mat)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 24  4</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(unit_covs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 24  2</code></pre>
+</div>
+</div>
+</section>
+<section id="flocker_fit" class="level2" data-number="12.2">
+<h2 data-number="12.2" class="anchored" data-anchor-id="flocker_fit"><span class="header-section-number">12.2</span> <code>flocker_fit</code></h2>
+<p>Even without access to <code>true_event</code>, the repeated survey data is strong enough to recover the main patterns in occurrence and detection. However, the occupancy component becomes noticeably less precise once true status is treated as latent.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">#flocker fit (random intercept version) was run in the background and stored</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>flocker_fit <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"outputs/models/flocker_fit.rds"</span>)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(flocker_fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Family: occupancy_single 
+  Links: mu = identity; occ = identity 
+Formula: ff_y | vint(ff_n_unit, ff_n_rep, ff_Q, ff_rep_index1, ff_rep_index2, ff_rep_index3, ff_rep_index4) ~ cloud_cover_z + sensor_advanced 
+         occ ~ site_age_z + (1 | region)
+   Data: data (Number of observations: 96) 
+  Draws: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+         total post-warmup draws = 4000
+
+Multilevel Hyperparameters:
+~region (Number of levels: 4) 
+                  Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(occ_Intercept)     1.53      2.01     0.04     5.33 1.01      879      895
+
+Regression Coefficients:
+                Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept          -1.14      0.56    -2.29    -0.07 1.00     2199     2511
+occ_Intercept       0.80      2.28    -1.47     5.62 1.01      704      344
+cloud_cover_z      -1.50      0.52    -2.67    -0.59 1.00     2405     1903
+sensor_advanced     2.23      0.94     0.56     4.25 1.00     2421     2312
+occ_site_age_z      2.97      2.70     0.48     8.87 1.01      739      389
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(flocker_fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Site-Levell Posterior Occupancy</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>Z_hist <span class="ot">&lt;-</span> <span class="fu">get_Z</span>(</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  flocker_fit,</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">history_condition =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">sample =</span> <span class="cn">FALSE</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="co"># For a single-season single-species model, this should be:</span></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="co"># sites x draws   OR   sites x 1 x draws</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>Z_dim <span class="ot">&lt;-</span> <span class="fu">dim</span>(Z_hist)</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(Z_dim) <span class="sc">==</span> <span class="dv">2</span>) {</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>  Z_mat <span class="ot">&lt;-</span> Z_hist</span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">length</span>(Z_dim) <span class="sc">==</span> <span class="dv">3</span>) {</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>  Z_mat <span class="ot">&lt;-</span> Z_hist[, <span class="dv">1</span>, ]</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stop</span>(<span class="st">"Unexpected shape from get_Z(); run str(Z_hist) and inspect."</span>)</span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>site_occ_probs <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">site_id =</span> site_df<span class="sc">$</span>site_id,</span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">occ_prob_mean =</span> <span class="fu">rowMeans</span>(Z_mat, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">occ_prob_lo =</span> <span class="fu">apply</span>(Z_mat, <span class="dv">1</span>, quantile, <span class="at">probs =</span> <span class="fl">0.025</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">occ_prob_hi =</span> <span class="fu">apply</span>(Z_mat, <span class="dv">1</span>, quantile, <span class="at">probs =</span> <span class="fl">0.975</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(site_df, <span class="at">by =</span> <span class="st">"site_id"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(occ_prob_mean)</span>
+<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a>readr<span class="sc">::</span><span class="fu">write_csv</span>(</span>
+<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a>  site_occ_probs,</span>
+<span id="cb33-30"><a href="#cb33-30" aria-hidden="true" tabindex="-1"></a>  <span class="st">"outputs/tables/site_occ_probs.csv"</span></span>
+<span id="cb33-31"><a href="#cb33-31" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Occupancy curve across site age</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>age_seq <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">min</span>(site_df<span class="sc">$</span>site_age), <span class="fu">max</span>(site_df<span class="sc">$</span>site_age), <span class="at">length.out =</span> <span class="dv">100</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>age_seq_z <span class="ot">&lt;-</span> (age_seq <span class="sc">-</span> <span class="fu">mean</span>(site_df<span class="sc">$</span>site_age)) <span class="sc">/</span> <span class="fu">sd</span>(site_df<span class="sc">$</span>site_age)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>occ_newdata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">site_age_z =</span> age_seq_z,</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">region =</span> <span class="fu">factor</span>(<span class="st">"North"</span>, <span class="at">levels =</span> <span class="fu">unique</span>(site_df<span class="sc">$</span>region))</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>occ_fit <span class="ot">&lt;-</span> <span class="fu">fitted_flocker</span>(</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>  flocker_fit,</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">components =</span> <span class="st">"occ"</span>,</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">new_data =</span> occ_newdata,</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">summarise =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">response =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">re_formula =</span> <span class="cn">NA</span></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>occ_curve <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(</span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>  occ_newdata,</span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>(occ_fit[[<span class="dv">1</span>]])</span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">site_age =</span> age_seq)</span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a>readr<span class="sc">::</span><span class="fu">write_csv</span>(</span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>  occ_curve,</span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>  <span class="st">"outputs/tables/flocker_occ_curve.csv"</span></span>
+<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Detection curve across cloud cover, by sensor</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>cloud_seq <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">min</span>(survey_df<span class="sc">$</span>cloud_cover), <span class="fu">max</span>(survey_df<span class="sc">$</span>cloud_cover), <span class="at">length.out =</span> <span class="dv">100</span>)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>cloud_seq_z <span class="ot">&lt;-</span> (cloud_seq <span class="sc">-</span> <span class="fu">mean</span>(survey_df<span class="sc">$</span>cloud_cover)) <span class="sc">/</span> <span class="fu">sd</span>(survey_df<span class="sc">$</span>cloud_cover)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>det_newdata <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">cloud_cover_z =</span> cloud_seq_z,</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">sensor_advanced =</span> <span class="dv">0</span>,</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">sensor_type =</span> <span class="st">"basic"</span>,</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">site_age_z =</span> <span class="dv">0</span>,</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">region =</span> <span class="fu">factor</span>(<span class="st">"North"</span>, <span class="at">levels =</span> <span class="fu">unique</span>(site_df<span class="sc">$</span>region))</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">cloud_cover_z =</span> cloud_seq_z,</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">sensor_advanced =</span> <span class="dv">1</span>,</span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">sensor_type =</span> <span class="st">"advanced"</span>,</span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">site_age_z =</span> <span class="dv">0</span>,</span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">region =</span> <span class="fu">factor</span>(<span class="st">"North"</span>, <span class="at">levels =</span> <span class="fu">unique</span>(site_df<span class="sc">$</span>region))</span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a>det_fit <span class="ot">&lt;-</span> <span class="fu">fitted_flocker</span>(</span>
+<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a>  flocker_fit,</span>
+<span id="cb35-23"><a href="#cb35-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">components =</span> <span class="st">"det"</span>,</span>
+<span id="cb35-24"><a href="#cb35-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">new_data =</span> det_newdata,</span>
+<span id="cb35-25"><a href="#cb35-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">summarise =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb35-26"><a href="#cb35-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">response =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb35-27"><a href="#cb35-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">re_formula =</span> <span class="cn">NA</span></span>
+<span id="cb35-28"><a href="#cb35-28" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb35-29"><a href="#cb35-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-30"><a href="#cb35-30" aria-hidden="true" tabindex="-1"></a>det_curve <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(</span>
+<span id="cb35-31"><a href="#cb35-31" aria-hidden="true" tabindex="-1"></a>  det_newdata,</span>
+<span id="cb35-32"><a href="#cb35-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>(det_fit[[<span class="dv">1</span>]])</span>
+<span id="cb35-33"><a href="#cb35-33" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb35-34"><a href="#cb35-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cloud_cover =</span> <span class="fu">rep</span>(cloud_seq, <span class="dv">2</span>))</span>
+<span id="cb35-35"><a href="#cb35-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-36"><a href="#cb35-36" aria-hidden="true" tabindex="-1"></a>readr<span class="sc">::</span><span class="fu">write_csv</span>(</span>
+<span id="cb35-37"><a href="#cb35-37" aria-hidden="true" tabindex="-1"></a>  det_curve,</span>
+<span id="cb35-38"><a href="#cb35-38" aria-hidden="true" tabindex="-1"></a>  <span class="st">"outputs/tables/flocker_det_curve.csv"</span></span>
+<span id="cb35-39"><a href="#cb35-39" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb35-40"><a href="#cb35-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-41"><a href="#cb35-41" aria-hidden="true" tabindex="-1"></a>readr<span class="sc">::</span><span class="fu">write_csv</span>(</span>
+<span id="cb35-42"><a href="#cb35-42" aria-hidden="true" tabindex="-1"></a>  survey_df,</span>
+<span id="cb35-43"><a href="#cb35-43" aria-hidden="true" tabindex="-1"></a>  <span class="st">"outputs/tables/detection_history_for_plot.csv"</span></span>
+<span id="cb35-44"><a href="#cb35-44" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>ever_detected_df <span class="ot">&lt;-</span> survey_df <span class="sc">|&gt;</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(site_id) <span class="sc">|&gt;</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">ever_detected =</span> <span class="fu">as.integer</span>(<span class="fu">any</span>(detected <span class="sc">==</span> <span class="dv">1</span>)),</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>site_occ_plot_df <span class="ot">&lt;-</span> site_occ_probs <span class="sc">|&gt;</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(ever_detected_df, <span class="at">by =</span> <span class="st">"site_id"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(occ_prob_mean) <span class="sc">|&gt;</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">site_id =</span> <span class="fu">factor</span>(site_id, <span class="at">levels =</span> site_id))</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>draws <span class="ot">&lt;-</span> posterior<span class="sc">::</span><span class="fu">as_draws_df</span>(flocker_fit) <span class="sc">|&gt;</span></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="comparing-occurence-vs.-flocker" class="level1" data-number="13">
+<h1 data-number="13"><span class="header-section-number">13</span> Comparing <code>occurence</code> vs.&nbsp;<code>flocker</code></h1>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>all_sites_df <span class="ot">&lt;-</span> site_occ_plot_df <span class="sc">|&gt;</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">panel =</span> <span class="st">"All sites"</span>)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(all_sites_df, <span class="fu">aes</span>(<span class="at">x =</span> occ_prob_mean, <span class="at">y =</span> site_id)) <span class="sc">+</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbarh</span>(<span class="fu">aes</span>(<span class="at">xmin =</span> occ_prob_lo, <span class="at">xmax =</span> occ_prob_hi), <span class="at">height =</span> <span class="fl">0.15</span>) <span class="sc">+</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">shape =</span> <span class="fu">factor</span>(ever_detected)), <span class="at">size =</span> <span class="fl">2.5</span>) <span class="sc">+</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> panel, <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Posterior probability of true occupancy"</span>,</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Site"</span>,</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">shape =</span> <span class="st">"Ever detected"</span>,</span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Site-level posterior occupancy from the flocker model"</span></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Most sites are pushed close to 0 or 1, but a small set of never-detected sites still retain meaningful occupancy probability.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>site_order <span class="ot">&lt;-</span> site_occ_plot_df <span class="sc">|&gt;</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(occ_prob_mean) <span class="sc">|&gt;</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(site_id) <span class="sc">|&gt;</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.character</span>()</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>hist_plot_df <span class="ot">&lt;-</span> survey_df <span class="sc">|&gt;</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(site_occ_probs <span class="sc">|&gt;</span> <span class="fu">select</span>(site_id, occ_prob_mean), <span class="at">by =</span> <span class="st">"site_id"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">site_id =</span> <span class="fu">factor</span>(site_id, <span class="at">levels =</span> site_order),</span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">survey_id =</span> <span class="fu">factor</span>(survey_id, <span class="at">levels =</span> <span class="fu">sort</span>(<span class="fu">unique</span>(survey_id))),</span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">detected_label =</span> <span class="fu">if_else</span>(detected <span class="sc">==</span> <span class="dv">1</span>, <span class="st">"Detected"</span>, <span class="st">"Not detected"</span>)</span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(hist_plot_df, <span class="fu">aes</span>(<span class="at">x =</span> survey_id, <span class="at">y =</span> site_id, <span class="at">fill =</span> detected_label)) <span class="sc">+</span></span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Survey occasion"</span>,</span>
+<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Site (ordered by posterior occupancy)"</span>,</span>
+<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="cn">NULL</span>,</span>
+<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Observed detection histories ordered by inferred occupancy"</span></span>
+<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>age_grid <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">site_age =</span> <span class="fu">seq</span>(<span class="fu">min</span>(site_df<span class="sc">$</span>site_age), <span class="fu">max</span>(site_df<span class="sc">$</span>site_age), <span class="at">length.out =</span> <span class="dv">100</span>)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">site_age_z =</span> (site_age <span class="sc">-</span> <span class="fu">mean</span>(site_df<span class="sc">$</span>site_age)) <span class="sc">/</span> <span class="fu">sd</span>(site_df<span class="sc">$</span>site_age)</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>occ_curve <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map_dfr</span>(<span class="fu">seq_len</span>(<span class="fu">nrow</span>(age_grid)), <span class="cf">function</span>(i) {</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">plogis</span>(</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>    draws<span class="sc">$</span>b_occ_Intercept <span class="sc">+</span></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>      draws<span class="sc">$</span>b_occ_site_age_z <span class="sc">*</span> age_grid<span class="sc">$</span>site_age_z[i]</span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(</span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">site_age =</span> age_grid<span class="sc">$</span>site_age[i],</span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">occ_mean =</span> <span class="fu">mean</span>(p),</span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">occ_lo =</span> <span class="fu">quantile</span>(p, <span class="fl">0.025</span>),</span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">occ_hi =</span> <span class="fu">quantile</span>(p, <span class="fl">0.975</span>)</span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(occ_curve, <span class="fu">aes</span>(<span class="at">x =</span> site_age, <span class="at">y =</span> occ_mean)) <span class="sc">+</span></span>
+<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> occ_lo, <span class="at">ymax =</span> occ_hi), <span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb39-25"><a href="#cb39-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb39-26"><a href="#cb39-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Site age"</span>,</span>
+<span id="cb39-27"><a href="#cb39-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Estimated occupancy probability"</span>,</span>
+<span id="cb39-28"><a href="#cb39-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Estimated occupancy increases with site age"</span></span>
+<span id="cb39-29"><a href="#cb39-29" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb39-30"><a href="#cb39-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>cloud_grid <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">cloud_cover =</span> <span class="fu">seq</span>(<span class="fu">min</span>(survey_df<span class="sc">$</span>cloud_cover), <span class="fu">max</span>(survey_df<span class="sc">$</span>cloud_cover), <span class="at">length.out =</span> <span class="dv">100</span>),</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">sensor_advanced =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">sensor_type =</span> <span class="fu">if_else</span>(sensor_advanced <span class="sc">==</span> <span class="dv">1</span>, <span class="st">"Advanced sensor"</span>, <span class="st">"Basic sensor"</span>),</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">cloud_cover_z =</span> (cloud_cover <span class="sc">-</span> <span class="fu">mean</span>(survey_df<span class="sc">$</span>cloud_cover)) <span class="sc">/</span> <span class="fu">sd</span>(survey_df<span class="sc">$</span>cloud_cover)</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>det_curve <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map_dfr</span>(<span class="fu">seq_len</span>(<span class="fu">nrow</span>(cloud_grid)), <span class="cf">function</span>(i) {</span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">plogis</span>(</span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>    draws<span class="sc">$</span>b_Intercept <span class="sc">+</span></span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>      draws<span class="sc">$</span>b_cloud_cover_z <span class="sc">*</span> cloud_grid<span class="sc">$</span>cloud_cover_z[i] <span class="sc">+</span></span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>      draws<span class="sc">$</span>b_sensor_advanced <span class="sc">*</span> cloud_grid<span class="sc">$</span>sensor_advanced[i]</span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(</span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">cloud_cover =</span> cloud_grid<span class="sc">$</span>cloud_cover[i],</span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">sensor_type =</span> cloud_grid<span class="sc">$</span>sensor_type[i],</span>
+<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">det_mean =</span> <span class="fu">mean</span>(p),</span>
+<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">det_lo =</span> <span class="fu">quantile</span>(p, <span class="fl">0.025</span>),</span>
+<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">det_hi =</span> <span class="fu">quantile</span>(p, <span class="fl">0.975</span>)</span>
+<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb40-24"><a href="#cb40-24" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb40-25"><a href="#cb40-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-26"><a href="#cb40-26" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(det_curve, <span class="fu">aes</span>(<span class="at">x =</span> cloud_cover, <span class="at">y =</span> det_mean)) <span class="sc">+</span></span>
+<span id="cb40-27"><a href="#cb40-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> det_lo, <span class="at">ymax =</span> det_hi), <span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb40-28"><a href="#cb40-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb40-29"><a href="#cb40-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> sensor_type) <span class="sc">+</span></span>
+<span id="cb40-30"><a href="#cb40-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb40-31"><a href="#cb40-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Cloud cover"</span>,</span>
+<span id="cb40-32"><a href="#cb40-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Estimated detection probability"</span>,</span>
+<span id="cb40-33"><a href="#cb40-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Detection declines as cloud cover increases"</span></span>
+<span id="cb40-34"><a href="#cb40-34" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb40-35"><a href="#cb40-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>age_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(site_df<span class="sc">$</span>site_age)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>age_sd   <span class="ot">&lt;-</span> <span class="fu">sd</span>(site_df<span class="sc">$</span>site_age)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>naive_draws <span class="ot">&lt;-</span> posterior<span class="sc">::</span><span class="fu">as_draws_df</span>(naive_fit) <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>()</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>occ_draws   <span class="ot">&lt;-</span> posterior<span class="sc">::</span><span class="fu">as_draws_df</span>(occurrence_fit) <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>()</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>flock_draws <span class="ot">&lt;-</span> posterior<span class="sc">::</span><span class="fu">as_draws_df</span>(flocker_fit) <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>()</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>ages_to_compare <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>)</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>pred_summary <span class="ot">&lt;-</span> <span class="cf">function</span>(p) {</span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(</span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">estimate =</span> <span class="fu">mean</span>(p),</span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">lo =</span> <span class="fu">quantile</span>(p, <span class="fl">0.025</span>),</span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">hi =</span> <span class="fu">quantile</span>(p, <span class="fl">0.975</span>)</span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a><span class="co"># ---------------------------------</span></span>
+<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a><span class="co"># TABLE A: predicted probabilities at example ages</span></span>
+<span id="cb41-20"><a href="#cb41-20" aria-hidden="true" tabindex="-1"></a><span class="co"># using a "typical region" (random effect = 0)</span></span>
+<span id="cb41-21"><a href="#cb41-21" aria-hidden="true" tabindex="-1"></a><span class="co"># ---------------------------------</span></span>
+<span id="cb41-22"><a href="#cb41-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-23"><a href="#cb41-23" aria-hidden="true" tabindex="-1"></a>table_age <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(ages_to_compare, <span class="cf">function</span>(age_val) {</span>
+<span id="cb41-24"><a href="#cb41-24" aria-hidden="true" tabindex="-1"></a>  age_z <span class="ot">&lt;-</span> (age_val <span class="sc">-</span> age_mean) <span class="sc">/</span> age_sd</span>
+<span id="cb41-25"><a href="#cb41-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-26"><a href="#cb41-26" aria-hidden="true" tabindex="-1"></a>  p_naive <span class="ot">&lt;-</span> <span class="fu">plogis</span>(</span>
+<span id="cb41-27"><a href="#cb41-27" aria-hidden="true" tabindex="-1"></a>    naive_draws<span class="sc">$</span>b_Intercept <span class="sc">+</span></span>
+<span id="cb41-28"><a href="#cb41-28" aria-hidden="true" tabindex="-1"></a>      naive_draws<span class="sc">$</span>b_site_age_z <span class="sc">*</span> age_z</span>
+<span id="cb41-29"><a href="#cb41-29" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb41-30"><a href="#cb41-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-31"><a href="#cb41-31" aria-hidden="true" tabindex="-1"></a>  p_occ <span class="ot">&lt;-</span> <span class="fu">plogis</span>(</span>
+<span id="cb41-32"><a href="#cb41-32" aria-hidden="true" tabindex="-1"></a>    occ_draws<span class="sc">$</span>b_Intercept <span class="sc">+</span></span>
+<span id="cb41-33"><a href="#cb41-33" aria-hidden="true" tabindex="-1"></a>      occ_draws<span class="sc">$</span>b_site_age_z <span class="sc">*</span> age_z</span>
+<span id="cb41-34"><a href="#cb41-34" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb41-35"><a href="#cb41-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-36"><a href="#cb41-36" aria-hidden="true" tabindex="-1"></a>  p_flock <span class="ot">&lt;-</span> <span class="fu">plogis</span>(</span>
+<span id="cb41-37"><a href="#cb41-37" aria-hidden="true" tabindex="-1"></a>    flock_draws<span class="sc">$</span>b_occ_Intercept <span class="sc">+</span></span>
+<span id="cb41-38"><a href="#cb41-38" aria-hidden="true" tabindex="-1"></a>      flock_draws<span class="sc">$</span>b_occ_site_age_z <span class="sc">*</span> age_z</span>
+<span id="cb41-39"><a href="#cb41-39" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb41-40"><a href="#cb41-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-41"><a href="#cb41-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(</span>
+<span id="cb41-42"><a href="#cb41-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pred_summary</span>(p_occ)   <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Benchmark"</span>),</span>
+<span id="cb41-43"><a href="#cb41-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pred_summary</span>(p_naive) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Naive"</span>),</span>
+<span id="cb41-44"><a href="#cb41-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pred_summary</span>(p_flock) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Flocker"</span>)</span>
+<span id="cb41-45"><a href="#cb41-45" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb41-46"><a href="#cb41-46" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">site_age =</span> age_val)</span>
+<span id="cb41-47"><a href="#cb41-47" aria-hidden="true" tabindex="-1"></a>}) <span class="sc">|&gt;</span></span>
+<span id="cb41-48"><a href="#cb41-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(site_age, model, estimate, lo, hi) <span class="sc">|&gt;</span></span>
+<span id="cb41-49"><a href="#cb41-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(site_age, <span class="fu">match</span>(model, <span class="fu">c</span>(<span class="st">"Benchmark"</span>, <span class="st">"Flocker"</span>, <span class="st">"Naive"</span>)))</span>
+<span id="cb41-50"><a href="#cb41-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-51"><a href="#cb41-51" aria-hidden="true" tabindex="-1"></a>table_age_diff <span class="ot">&lt;-</span> table_age <span class="sc">|&gt;</span></span>
+<span id="cb41-52"><a href="#cb41-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(site_age, model, estimate) <span class="sc">|&gt;</span></span>
+<span id="cb41-53"><a href="#cb41-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> model, <span class="at">values_from =</span> estimate) <span class="sc">|&gt;</span></span>
+<span id="cb41-54"><a href="#cb41-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb41-55"><a href="#cb41-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">flocker_vs_benchmark =</span> <span class="fu">abs</span>(Flocker <span class="sc">-</span> Benchmark),</span>
+<span id="cb41-56"><a href="#cb41-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">naive_vs_benchmark   =</span> <span class="fu">abs</span>(Naive <span class="sc">-</span> Benchmark)</span>
+<span id="cb41-57"><a href="#cb41-57" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb41-58"><a href="#cb41-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-59"><a href="#cb41-59" aria-hidden="true" tabindex="-1"></a>table_age_diff</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 6
+  site_age Benchmark Flocker Naive flocker_vs_benchmark naive_vs_benchmark
+     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;                &lt;dbl&gt;              &lt;dbl&gt;
+1       10     0.292   0.200 0.286               0.0915            0.00570
+2       20     0.692   0.754 0.553               0.0622            0.139  
+3       30     0.904   0.937 0.775               0.0335            0.129  </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>site_compare <span class="ot">&lt;-</span> site_df <span class="sc">|&gt;</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(site_id, true_event) <span class="sc">|&gt;</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>    survey_df <span class="sc">|&gt;</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">group_by</span>(site_id) <span class="sc">|&gt;</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">summarise</span>(</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">ever_detected =</span> <span class="fu">as.integer</span>(<span class="fu">any</span>(detected <span class="sc">==</span> <span class="dv">1</span>)),</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="st">"site_id"</span></span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>    site_occ_probs <span class="sc">|&gt;</span></span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(site_id, occ_prob_mean),</span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="st">"site_id"</span></span>
+<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">naive_pred   =</span> ever_detected,</span>
+<span id="cb43-19"><a href="#cb43-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">flocker_pred =</span> <span class="fu">as.integer</span>(occ_prob_mean <span class="sc">&gt;=</span> <span class="fl">0.5</span>)</span>
+<span id="cb43-20"><a href="#cb43-20" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb43-21"><a href="#cb43-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-22"><a href="#cb43-22" aria-hidden="true" tabindex="-1"></a>site_compare</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 6
+   site_id true_event ever_detected occ_prob_mean naive_pred flocker_pred
+   &lt;fct&gt;        &lt;dbl&gt;         &lt;int&gt;         &lt;dbl&gt;      &lt;int&gt;        &lt;int&gt;
+ 1 S01              0             0       0.00160          0            0
+ 2 S02              0             0       0.0176           0            0
+ 3 S03              1             1       1                1            1
+ 4 S04              0             0       0.00347          0            0
+ 5 S05              1             1       1                1            1
+ 6 S06              0             0       0.00329          0            0
+ 7 S07              1             0       0.398            0            0
+ 8 S08              1             1       1                1            1
+ 9 S09              1             1       1                1            1
+10 S10              0             0       0.0379           0            0
+# ℹ 14 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>classification_summary <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  site_compare <span class="sc">|&gt;</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">model =</span> <span class="st">"Naive"</span>,</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">true_positives =</span> <span class="fu">sum</span>(naive_pred <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> true_event <span class="sc">==</span> <span class="dv">1</span>),</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">false_negatives =</span> <span class="fu">sum</span>(naive_pred <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> true_event <span class="sc">==</span> <span class="dv">1</span>),</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">true_negatives =</span> <span class="fu">sum</span>(naive_pred <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> true_event <span class="sc">==</span> <span class="dv">0</span>),</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">false_positives =</span> <span class="fu">sum</span>(naive_pred <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> true_event <span class="sc">==</span> <span class="dv">0</span>)</span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>  site_compare <span class="sc">|&gt;</span></span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">model =</span> <span class="st">"Flocker"</span>,</span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">true_positives =</span> <span class="fu">sum</span>(flocker_pred <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> true_event <span class="sc">==</span> <span class="dv">1</span>),</span>
+<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">false_negatives =</span> <span class="fu">sum</span>(flocker_pred <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> true_event <span class="sc">==</span> <span class="dv">1</span>),</span>
+<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">true_negatives =</span> <span class="fu">sum</span>(flocker_pred <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> true_event <span class="sc">==</span> <span class="dv">0</span>),</span>
+<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">false_positives =</span> <span class="fu">sum</span>(flocker_pred <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> true_event <span class="sc">==</span> <span class="dv">0</span>)</span>
+<span id="cb45-17"><a href="#cb45-17" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb45-18"><a href="#cb45-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb45-19"><a href="#cb45-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-20"><a href="#cb45-20" aria-hidden="true" tabindex="-1"></a>classification_summary</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 5
+  model   true_positives false_negatives true_negatives false_positives
+  &lt;chr&gt;            &lt;int&gt;           &lt;int&gt;          &lt;int&gt;           &lt;int&gt;
+1 Naive               11               2             11               0
+2 Flocker             12               1             11               0</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>rescued_sites <span class="ot">&lt;-</span> site_compare <span class="sc">|&gt;</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(true_event <span class="sc">==</span> <span class="dv">1</span>, ever_detected <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(site_id, occ_prob_mean) <span class="sc">|&gt;</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(occ_prob_mean))</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>rescued_sites</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 2
+  site_id occ_prob_mean
+  &lt;fct&gt;           &lt;dbl&gt;
+1 S17             0.617
+2 S07             0.398</code></pre>
+</div>
+</div>
+</section>
+<section id="conclusion" class="level1" data-number="14">
+<h1 data-number="14"><span class="header-section-number">14</span> Conclusion</h1>
 <p>This analysis shows why imperfect detection matters in methane monitoring. In a repeated-survey dataset, a nondetection can represent either true absence or a missed detection, and treating those outcomes as equivalent leads to lower estimated occurrence. The naive model captured the broad age pattern in the data, but it understated leak probability because it relied only on whether a site was ever detected. The detection-aware strategy gave a more informative picture by separating benchmark site status from survey-level detection and by allowing regional baselines to vary.</p>
 <p>The fitted models were intentionally simple: Bernoulli-logit models, one random-intercept structure, weakly regularizing priors, posterior summaries, and basic posterior predictive checks. Even within that limited framework, the analysis suggests that older infrastructure is associated with higher leak probability, cloud cover reduces detection, and sensor type can affect detectability. The broader lesson is clear: environmental monitoring data are shaped both by the system being observed and by the process used to observe it. When those two sources of variation are collapsed into a single observed outcome, inference becomes easier, but also less reliable.</p>
 </section>
-<section id="appendix" class="level1" data-number="13">
-<h1 data-number="13"><span class="header-section-number">13</span> Appendix</h1>
+<section id="appendix" class="level1" data-number="15">
+<h1 data-number="15"><span class="header-section-number">15</span> Appendix</h1>
 
 
 
 </section>
-<section id="session-checks" class="level1" data-number="14">
-<h1 data-number="14"><span class="header-section-number">14</span> Session checks</h1>
+<section id="session-checks" class="level1" data-number="16">
+<h1 data-number="16"><span class="header-section-number">16</span> Session checks</h1>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"brms"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"brms"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] '2.23.0'</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"posterior"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"posterior"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] '1.7.0'</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"flocker"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] '1.0.0'</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.5.3 (2026-03-11)
 Platform: x86_64-pc-linux-gnu
@@ -849,42 +1402,43 @@ attached base packages:
 [1] stats     graphics  grDevices datasets  utils     methods   base     
 
 other attached packages:
- [1] posterior_1.7.0 brms_2.23.0     Rcpp_1.1.1      lubridate_1.9.5
- [5] forcats_1.0.1   stringr_1.6.0   dplyr_1.2.1     purrr_1.2.1    
- [9] readr_2.2.0     tidyr_1.3.2     tibble_3.3.1    ggplot2_4.0.2  
-[13] tidyverse_2.0.0
+ [1] flocker_1.0-0   posterior_1.7.0 brms_2.23.0     Rcpp_1.1.1-1   
+ [5] lubridate_1.9.5 forcats_1.0.1   stringr_1.6.0   dplyr_1.2.1    
+ [9] purrr_1.2.2     readr_2.2.0     tidyr_1.3.2     tibble_3.3.1   
+[13] ggplot2_4.0.2   tidyverse_2.0.0
 
 loaded via a namespace (and not attached):
- [1] gtable_0.3.6          tensorA_0.36.2.1      xfun_0.57            
- [4] QuickJSR_1.9.0        inline_0.3.21         lattice_0.22-9       
- [7] tzdb_0.5.0            vctrs_0.7.2           tools_4.5.3          
+ [1] gtable_0.3.6          tensorA_0.36.2.1      QuickJSR_1.9.2       
+ [4] xfun_0.57             inline_0.3.21         lattice_0.22-9       
+ [7] tzdb_0.5.0            vctrs_0.7.3           tools_4.5.3          
 [10] generics_0.1.4        stats4_4.5.3          parallel_4.5.3       
 [13] pkgconfig_2.0.3       Matrix_1.7-5          checkmate_2.3.4      
-[16] RColorBrewer_1.1-3    S7_0.2.1              distributional_0.7.0 
-[19] RcppParallel_5.1.11-2 lifecycle_1.0.5       compiler_4.5.3       
-[22] farver_2.1.2          Brobdingnag_1.2-9     codetools_0.2-20     
-[25] htmltools_0.5.9       bayesplot_1.15.0      yaml_2.3.12          
-[28] pillar_1.11.1         crayon_1.5.3          StanHeaders_2.32.10  
-[31] bridgesampling_1.2-1  abind_1.4-8           nlme_3.1-169         
-[34] rstan_2.32.7          tidyselect_1.2.1      digest_0.6.39        
-[37] mvtnorm_1.3-6         stringi_1.8.7         reshape2_1.4.5       
-[40] labeling_0.4.3        fastmap_1.2.0         grid_4.5.3           
-[43] cli_3.6.5             magrittr_2.0.5        loo_2.9.0            
-[46] utf8_1.2.6            pkgbuild_1.4.8        withr_3.0.2          
-[49] scales_1.4.0          backports_1.5.1       bit64_4.6.0-1        
-[52] timechange_0.4.0      rmarkdown_2.31        matrixStats_1.5.0    
-[55] bit_4.6.0             gridExtra_2.3         hms_1.1.4            
-[58] coda_0.19-4.1         evaluate_1.0.5        knitr_1.51           
-[61] rstantools_2.6.0      rlang_1.2.0           glue_1.8.0           
-[64] renv_1.2.0            vroom_1.7.1           jsonlite_2.0.0       
-[67] plyr_1.8.9            R6_2.6.1             </code></pre>
+[16] RColorBrewer_1.1-3    S7_0.2.1-1            assertthat_0.2.1     
+[19] distributional_0.7.0  RcppParallel_5.1.11-2 lifecycle_1.0.5      
+[22] compiler_4.5.3        farver_2.1.2          Brobdingnag_1.2-9    
+[25] codetools_0.2-20      htmltools_0.5.9       bayesplot_1.15.0     
+[28] yaml_2.3.12           pillar_1.11.1         crayon_1.5.3         
+[31] StanHeaders_2.32.10   bridgesampling_1.2-1  boot_1.3-32          
+[34] abind_1.4-8           nlme_3.1-169          rstan_2.32.7         
+[37] tidyselect_1.2.1      digest_0.6.39         mvtnorm_1.3-7        
+[40] stringi_1.8.7         reshape2_1.4.5        labeling_0.4.3       
+[43] fastmap_1.2.0         grid_4.5.3            cli_3.6.6            
+[46] magrittr_2.0.5        loo_2.9.0             utf8_1.2.6           
+[49] pkgbuild_1.4.8        withr_3.0.2           scales_1.4.0         
+[52] backports_1.5.1       bit64_4.6.0-1         timechange_0.4.0     
+[55] rmarkdown_2.31        matrixStats_1.5.0     bit_4.6.0            
+[58] gridExtra_2.3         hms_1.1.4             coda_0.19-4.1        
+[61] evaluate_1.0.5        knitr_1.51            rstantools_2.6.0     
+[64] rlang_1.2.0           glue_1.8.1            renv_1.2.0           
+[67] vroom_1.7.1           jsonlite_2.0.0        plyr_1.8.9           
+[70] R6_2.6.1             </code></pre>
 </div>
 </div>
 
 
 </section>
 
-<div id="quarto-appendix" class="default"><section id="appendix-a-site-level-data-dictionary" class="level2 appendix" data-number="13.1"><h2 class="anchored quarto-appendix-heading"><span class="header-section-number">13.1</span> Appendix A: Site-Level Data Dictionary</h2><div class="quarto-appendix-contents">
+<div id="quarto-appendix" class="default"><section id="appendix-a-site-level-data-dictionary" class="level2 appendix" data-number="15.1"><h2 class="anchored quarto-appendix-heading"><span class="header-section-number">15.1</span> Appendix A: Site-Level Data Dictionary</h2><div class="quarto-appendix-contents">
 
 <table class="caption-top table">
 <thead>
@@ -922,7 +1476,7 @@ loaded via a namespace (and not attached):
 </tr>
 </tbody>
 </table>
-</div></section><section id="appendix-b-survey-level-data-dictionary" class="level2 appendix" data-number="13.2"><h2 class="anchored quarto-appendix-heading"><span class="header-section-number">13.2</span> Appendix B: Survey-Level Data Dictionary</h2><div class="quarto-appendix-contents">
+</div></section><section id="appendix-b-survey-level-data-dictionary" class="level2 appendix" data-number="15.2"><h2 class="anchored quarto-appendix-heading"><span class="header-section-number">15.2</span> Appendix B: Survey-Level Data Dictionary</h2><div class="quarto-appendix-contents">
 
 <table class="caption-top table">
 <colgroup>
@@ -995,7 +1549,7 @@ loaded via a namespace (and not attached):
 </tr>
 </tbody>
 </table>
-</div></section><section id="appendix-c-model-parameter-dictionary" class="level2 appendix" data-number="13.3"><h2 class="anchored quarto-appendix-heading"><span class="header-section-number">13.3</span> Appendix C: Model Parameter Dictionary</h2><div class="quarto-appendix-contents">
+</div></section><section id="appendix-c-model-parameter-dictionary" class="level2 appendix" data-number="15.3"><h2 class="anchored quarto-appendix-heading"><span class="header-section-number">15.3</span> Appendix C: Model Parameter Dictionary</h2><div class="quarto-appendix-contents">
 
 <div id="tbl-parameter-dictionary" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
