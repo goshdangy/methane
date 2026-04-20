@@ -969,7 +969,7 @@ The fitted models were intentionally simple: Bernoulli-logit models, one random-
 ## Appendix B: Survey-Level Data Dictionary {.appendix}
 
 | Variable | Type | Description |
-|:-----------------------|:-----------------------|:-----------------------|
+|:---|:---|:---|
 | site_id | factor | Site identifier |
 | survey_id | factor | Survey occasion within one monitoring window |
 | region | factor | Region of site |
@@ -985,7 +985,7 @@ The fitted models were intentionally simple: Bernoulli-logit models, one random-
 ## Appendix C: Model Parameter Dictionary {.appendix}
 
 | Model | Parameter | Interpretation |
-|:-----------------------|:-----------------------|:-----------------------|
+|:---|:---|:---|
 | Naive fit | Intercept | Baseline log-odds of ever being detected |
 | Naive fit | Site age | Effect of standardized site age on ever-detected status |
 | Occurrence fit | Intercept | Baseline log-odds of benchmark occurrence |
