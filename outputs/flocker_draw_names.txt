@@ -1,0 +1,17 @@
+b_Intercept
+b_occ_Intercept
+b_cloud_cover_z
+b_sensor_advanced
+b_occ_site_age_z
+sd_region__occ_Intercept
+Intercept
+Intercept_occ
+r_region__occ[North,Intercept]
+r_region__occ[South,Intercept]
+r_region__occ[Central,Intercept]
+r_region__occ[West,Intercept]
+lprior
+lp__
+.chain
+.iteration
+.draw

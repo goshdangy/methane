@@ -7,6 +7,7 @@ subtitle: "Methane Leak Monitoring Across Repeated Surveys"
 library(tidyverse)
 library(brms)
 library(posterior)
+library(flocker)
 
 dir.create("outputs", showWarnings = FALSE)
 dir.create("outputs/models", recursive = TRUE, showWarnings = FALSE)
@@ -489,6 +490,464 @@ ggplot(appendix_df, aes(x = age_bin)) +
 
 This figure provides a compact summary of the same contrast shown in Figure 6. Across age bins, benchmark occurrence is generally higher than observed ever-detected prevalence, especially where the probability of occurrence is greatest. This supports the broader conclusion that repeated-survey datasets should not be analyzed as though every zero means the same thing.
 
+# Part II: Occurrence Model & `flocker`
+
+Now, More often than not, this is not how things work in reality. We do not have the "ground truth" at our disposal. So in this stage the goal is to see whether repeated survery histories alone contain enough information to recover the same broad ecological story about occurrence and imperfection detection.
+
+Statistically, the analysis shifts from separate Bernoulli-logit regressions to a single-season occupancy model. Instead of modeling `true_event` directly, the model treats true site status as a latent variable and estimates it jointly with the detection process using repeated detections and nondetections across visits.\
+
+## `flocker` Data Formatting
+
+`flocker` expects:\
+**Observation matrix**: one row per site, one column per survey\
+**Unit-level covariate**: one row per site\
+**Event-level covariates**: one matrix per survey-level predictor\
+\
+So we are going to do a lot of pivoting..
+
+```{r}
+#| label: flocker-data
+
+# 
+obs_mat <- survey_df |>
+  arrange(site_id, survey_id) |>
+  select(site_id, survey_id, detected) |>
+  pivot_wider(
+    names_from = survey_id,
+    values_from = detected
+  ) |>
+  tibble::column_to_rownames("site_id") |>
+  as.matrix()
+
+# 
+unit_covs <- survey_df |>
+  distinct(site_id, region, site_age_z) |>
+  arrange(site_id) |>
+  mutate(
+    region = factor(region, levels = c("North", "South", "Central", "West"))
+  ) |>
+  select(region, site_age_z)
+
+# 
+cloud_mat <- survey_df |>
+  arrange(site_id, survey_id) |>
+  select(site_id, survey_id, cloud_cover_z) |>
+  pivot_wider(
+    names_from = survey_id,
+    values_from = cloud_cover_z
+  ) |>
+  tibble::column_to_rownames("site_id") |>
+  as.matrix()
+
+sensor_mat <- survey_df |>
+  arrange(site_id, survey_id) |>
+  select(site_id, survey_id, sensor_advanced) |>
+  pivot_wider(
+    names_from = survey_id,
+    values_from = sensor_advanced
+  ) |>
+  tibble::column_to_rownames("site_id") |>
+  as.matrix()
+
+flocker_data <- make_flocker_data_static(
+  obs = obs_mat,
+  unit_covs = unit_covs,
+  event_covs = list(
+    cloud_cover_z = cloud_mat,
+    sensor_advanced = sensor_mat
+  )
+)
+
+#check
+dim(obs_mat)
+dim(unit_covs)
+```
+
+## `flocker_fit`
+
+Even without access to `true_event`, the repeated survey data is strong enough to recover the main patterns in occurrence and detection. However, the occupancy component becomes noticeably less precise once true status is treated as latent.
+
+```{r}
+#flocker fit (random intercept version) was run in the background and stored
+
+flocker_fit <- readRDS("outputs/models/flocker_fit.rds")
+summary(flocker_fit)
+pairs(flocker_fit)
+```
+
+Site-Levell Posterior Occupancy
+
+```{r}
+Z_hist <- get_Z(
+  flocker_fit,
+  history_condition = TRUE,
+  sample = FALSE
+)
+
+# For a single-season single-species model, this should be:
+# sites x draws   OR   sites x 1 x draws
+Z_dim <- dim(Z_hist)
+
+if (length(Z_dim) == 2) {
+  Z_mat <- Z_hist
+} else if (length(Z_dim) == 3) {
+  Z_mat <- Z_hist[, 1, ]
+} else {
+  stop("Unexpected shape from get_Z(); run str(Z_hist) and inspect.")
+}
+
+site_occ_probs <- tibble(
+  site_id = site_df$site_id,
+  occ_prob_mean = rowMeans(Z_mat, na.rm = TRUE),
+  occ_prob_lo = apply(Z_mat, 1, quantile, probs = 0.025, na.rm = TRUE),
+  occ_prob_hi = apply(Z_mat, 1, quantile, probs = 0.975, na.rm = TRUE)
+) |>
+  left_join(site_df, by = "site_id") |>
+  arrange(occ_prob_mean)
+
+readr::write_csv(
+  site_occ_probs,
+  "outputs/tables/site_occ_probs.csv"
+)
+```
+
+Occupancy curve across site age
+
+```{r}
+age_seq <- seq(min(site_df$site_age), max(site_df$site_age), length.out = 100)
+age_seq_z <- (age_seq - mean(site_df$site_age)) / sd(site_df$site_age)
+
+occ_newdata <- data.frame(
+  site_age_z = age_seq_z,
+  region = factor("North", levels = unique(site_df$region))
+)
+
+occ_fit <- fitted_flocker(
+  flocker_fit,
+  components = "occ",
+  new_data = occ_newdata,
+  summarise = TRUE,
+  response = TRUE,
+  re_formula = NA
+)
+
+occ_curve <- bind_cols(
+  occ_newdata,
+  as_tibble(occ_fit[[1]])
+) |>
+  mutate(site_age = age_seq)
+
+readr::write_csv(
+  occ_curve,
+  "outputs/tables/flocker_occ_curve.csv"
+)
+```
+
+Detection curve across cloud cover, by sensor
+
+```{r}
+cloud_seq <- seq(min(survey_df$cloud_cover), max(survey_df$cloud_cover), length.out = 100)
+cloud_seq_z <- (cloud_seq - mean(survey_df$cloud_cover)) / sd(survey_df$cloud_cover)
+
+det_newdata <- bind_rows(
+  data.frame(
+    cloud_cover_z = cloud_seq_z,
+    sensor_advanced = 0,
+    sensor_type = "basic",
+    site_age_z = 0,
+    region = factor("North", levels = unique(site_df$region))
+  ),
+  data.frame(
+    cloud_cover_z = cloud_seq_z,
+    sensor_advanced = 1,
+    sensor_type = "advanced",
+    site_age_z = 0,
+    region = factor("North", levels = unique(site_df$region))
+  )
+)
+
+det_fit <- fitted_flocker(
+  flocker_fit,
+  components = "det",
+  new_data = det_newdata,
+  summarise = TRUE,
+  response = TRUE,
+  re_formula = NA
+)
+
+det_curve <- bind_cols(
+  det_newdata,
+  as_tibble(det_fit[[1]])
+) |>
+  mutate(cloud_cover = rep(cloud_seq, 2))
+
+readr::write_csv(
+  det_curve,
+  "outputs/tables/flocker_det_curve.csv"
+)
+
+readr::write_csv(
+  survey_df,
+  "outputs/tables/detection_history_for_plot.csv"
+)
+```
+
+```{r}
+ever_detected_df <- survey_df |>
+  group_by(site_id) |>
+  summarise(
+    ever_detected = as.integer(any(detected == 1)),
+    .groups = "drop"
+  )
+
+site_occ_plot_df <- site_occ_probs |>
+  left_join(ever_detected_df, by = "site_id") |>
+  arrange(occ_prob_mean) |>
+  mutate(site_id = factor(site_id, levels = site_id))
+
+draws <- posterior::as_draws_df(flocker_fit) |>
+  as_tibble()
+```
+
+# Comparing `occurence` vs. `flocker`
+
+```{r}
+all_sites_df <- site_occ_plot_df |>
+  mutate(panel = "All sites")
+
+ggplot(all_sites_df, aes(x = occ_prob_mean, y = site_id)) +
+  geom_errorbarh(aes(xmin = occ_prob_lo, xmax = occ_prob_hi), height = 0.15) +
+  geom_point(aes(shape = factor(ever_detected)), size = 2.5) +
+  facet_wrap(~ panel, scales = "free_y", ncol = 2) +
+  scale_x_continuous(limits = c(0, 1)) +
+  labs(
+    x = "Posterior probability of true occupancy",
+    y = "Site",
+    shape = "Ever detected",
+    title = "Site-level posterior occupancy from the flocker model"
+  ) +
+  theme_minimal(base_size = 12)
+```
+
+Most sites are pushed close to 0 or 1, but a small set of never-detected sites still retain meaningful occupancy probability.
+
+```{r}
+site_order <- site_occ_plot_df |>
+  arrange(occ_prob_mean) |>
+  pull(site_id) |>
+  as.character()
+
+hist_plot_df <- survey_df |>
+  left_join(site_occ_probs |> select(site_id, occ_prob_mean), by = "site_id") |>
+  mutate(
+    site_id = factor(site_id, levels = site_order),
+    survey_id = factor(survey_id, levels = sort(unique(survey_id))),
+    detected_label = if_else(detected == 1, "Detected", "Not detected")
+  )
+
+ggplot(hist_plot_df, aes(x = survey_id, y = site_id, fill = detected_label)) +
+  geom_tile(color = "white", linewidth = 0.4) +
+  labs(
+    x = "Survey occasion",
+    y = "Site (ordered by posterior occupancy)",
+    fill = NULL,
+    title = "Observed detection histories ordered by inferred occupancy"
+  ) +
+  theme_minimal(base_size = 12)
+```
+
+```{r}
+age_grid <- tibble(
+  site_age = seq(min(site_df$site_age), max(site_df$site_age), length.out = 100)
+) |>
+  mutate(
+    site_age_z = (site_age - mean(site_df$site_age)) / sd(site_df$site_age)
+  )
+
+occ_curve <- purrr::map_dfr(seq_len(nrow(age_grid)), function(i) {
+  p <- plogis(
+    draws$b_occ_Intercept +
+      draws$b_occ_site_age_z * age_grid$site_age_z[i]
+  )
+
+  tibble(
+    site_age = age_grid$site_age[i],
+    occ_mean = mean(p),
+    occ_lo = quantile(p, 0.025),
+    occ_hi = quantile(p, 0.975)
+  )
+})
+
+ggplot(occ_curve, aes(x = site_age, y = occ_mean)) +
+  geom_ribbon(aes(ymin = occ_lo, ymax = occ_hi), alpha = 0.2) +
+  geom_line(linewidth = 1) +
+  labs(
+    x = "Site age",
+    y = "Estimated occupancy probability",
+    title = "Estimated occupancy increases with site age"
+  ) +
+  theme_minimal(base_size = 12)
+
+```
+
+```{r}
+cloud_grid <- expand_grid(
+  cloud_cover = seq(min(survey_df$cloud_cover), max(survey_df$cloud_cover), length.out = 100),
+  sensor_advanced = c(0, 1)
+) |>
+  mutate(
+    sensor_type = if_else(sensor_advanced == 1, "Advanced sensor", "Basic sensor"),
+    cloud_cover_z = (cloud_cover - mean(survey_df$cloud_cover)) / sd(survey_df$cloud_cover)
+  )
+
+det_curve <- purrr::map_dfr(seq_len(nrow(cloud_grid)), function(i) {
+  p <- plogis(
+    draws$b_Intercept +
+      draws$b_cloud_cover_z * cloud_grid$cloud_cover_z[i] +
+      draws$b_sensor_advanced * cloud_grid$sensor_advanced[i]
+  )
+
+  tibble(
+    cloud_cover = cloud_grid$cloud_cover[i],
+    sensor_type = cloud_grid$sensor_type[i],
+    det_mean = mean(p),
+    det_lo = quantile(p, 0.025),
+    det_hi = quantile(p, 0.975)
+  )
+})
+
+ggplot(det_curve, aes(x = cloud_cover, y = det_mean)) +
+  geom_ribbon(aes(ymin = det_lo, ymax = det_hi), alpha = 0.2) +
+  geom_line(linewidth = 1) +
+  facet_wrap(~ sensor_type) +
+  labs(
+    x = "Cloud cover",
+    y = "Estimated detection probability",
+    title = "Detection declines as cloud cover increases"
+  ) +
+  theme_minimal(base_size = 12)
+```
+
+```{r}
+
+age_mean <- mean(site_df$site_age)
+age_sd   <- sd(site_df$site_age)
+
+naive_draws <- posterior::as_draws_df(naive_fit) |> as_tibble()
+occ_draws   <- posterior::as_draws_df(occurrence_fit) |> as_tibble()
+flock_draws <- posterior::as_draws_df(flocker_fit) |> as_tibble()
+
+ages_to_compare <- c(10, 20, 30)
+
+pred_summary <- function(p) {
+  tibble(
+    estimate = mean(p),
+    lo = quantile(p, 0.025),
+    hi = quantile(p, 0.975)
+  )
+}
+
+# ---------------------------------
+# TABLE A: predicted probabilities at example ages
+# using a "typical region" (random effect = 0)
+# ---------------------------------
+
+table_age <- map_dfr(ages_to_compare, function(age_val) {
+  age_z <- (age_val - age_mean) / age_sd
+
+  p_naive <- plogis(
+    naive_draws$b_Intercept +
+      naive_draws$b_site_age_z * age_z
+  )
+
+  p_occ <- plogis(
+    occ_draws$b_Intercept +
+      occ_draws$b_site_age_z * age_z
+  )
+
+  p_flock <- plogis(
+    flock_draws$b_occ_Intercept +
+      flock_draws$b_occ_site_age_z * age_z
+  )
+
+  bind_rows(
+    pred_summary(p_occ)   |> mutate(model = "Benchmark"),
+    pred_summary(p_naive) |> mutate(model = "Naive"),
+    pred_summary(p_flock) |> mutate(model = "Flocker")
+  ) |>
+    mutate(site_age = age_val)
+}) |>
+  select(site_age, model, estimate, lo, hi) |>
+  arrange(site_age, match(model, c("Benchmark", "Flocker", "Naive")))
+
+table_age_diff <- table_age |>
+  select(site_age, model, estimate) |>
+  pivot_wider(names_from = model, values_from = estimate) |>
+  mutate(
+    flocker_vs_benchmark = abs(Flocker - Benchmark),
+    naive_vs_benchmark   = abs(Naive - Benchmark)
+  )
+
+table_age_diff
+```
+
+```{r}
+site_compare <- site_df |>
+  select(site_id, true_event) |>
+  left_join(
+    survey_df |>
+      group_by(site_id) |>
+      summarise(
+        ever_detected = as.integer(any(detected == 1)),
+        .groups = "drop"
+      ),
+    by = "site_id"
+  ) |>
+  left_join(
+    site_occ_probs |>
+      select(site_id, occ_prob_mean),
+    by = "site_id"
+  ) |>
+  mutate(
+    naive_pred   = ever_detected,
+    flocker_pred = as.integer(occ_prob_mean >= 0.5)
+  )
+
+site_compare
+```
+
+```{r}
+classification_summary <- bind_rows(
+  site_compare |>
+    summarise(
+      model = "Naive",
+      true_positives = sum(naive_pred == 1 & true_event == 1),
+      false_negatives = sum(naive_pred == 0 & true_event == 1),
+      true_negatives = sum(naive_pred == 0 & true_event == 0),
+      false_positives = sum(naive_pred == 1 & true_event == 0)
+    ),
+  site_compare |>
+    summarise(
+      model = "Flocker",
+      true_positives = sum(flocker_pred == 1 & true_event == 1),
+      false_negatives = sum(flocker_pred == 0 & true_event == 1),
+      true_negatives = sum(flocker_pred == 0 & true_event == 0),
+      false_positives = sum(flocker_pred == 1 & true_event == 0)
+    )
+)
+
+classification_summary
+```
+
+```{r}
+rescued_sites <- site_compare |>
+  filter(true_event == 1, ever_detected == 0) |>
+  select(site_id, occ_prob_mean) |>
+  arrange(desc(occ_prob_mean))
+
+rescued_sites
+```
+
 # Conclusion
 
 This analysis shows why imperfect detection matters in methane monitoring. In a repeated-survey dataset, a nondetection can represent either true absence or a missed detection, and treating those outcomes as equivalent leads to lower estimated occurrence. The naive model captured the broad age pattern in the data, but it understated leak probability because it relied only on whether a site was ever detected. The detection-aware strategy gave a more informative picture by separating benchmark site status from survey-level detection and by allowing regional baselines to vary.
@@ -543,5 +1002,6 @@ The fitted models were intentionally simple: Bernoulli-logit models, one random-
 ```{r}
 packageVersion("brms")
 packageVersion("posterior")
+packageVersion("flocker")
 sessionInfo()
 ```

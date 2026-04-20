@@ -70,6 +70,19 @@ detection_fit <- brm(
   seed = 222
 )
 
+flocker_fit <- flock(
+  flocker_data = flocker_data,
+  f_occ = ~ site_age_z + (1 | region),
+  f_det = ~ cloud_cover_z + sensor_advanced,
+  chains = 4,
+  iter = 2000,
+  warmup = 1000,
+  seed = 222,
+  refresh = 10,
+  control = list(adapt_delta = 0.95, max_treedepth = 12)
+)
+
 saveRDS(naive_fit, "outputs/models/naive_fit.rds")
 saveRDS(occurrence_fit, "outputs/models/occurrence_fit.rds")
 saveRDS(detection_fit, "outputs/models/detection_fit.rds")
+saveRDS(flocker_fit, "outputs/models/flocker_fit.rds")
